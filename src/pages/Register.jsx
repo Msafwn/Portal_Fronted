@@ -116,9 +116,9 @@ const Register = () => {
           roles={ROLES}
         />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5 md:space-y-3 2xl:space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-1.5 sm:space-y-2">
           {/* Row 1: Name & Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 md:gap-3 2xl:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
             <RegisterForm.Field
               label="Full Name"
               icon={User}
@@ -152,7 +152,7 @@ const Register = () => {
           </div>
 
           {/* Row 2: Password & Confirm Password */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 md:gap-3 2xl:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
             <RegisterForm.Field
               label="Password"
               icon={Lock}
@@ -188,10 +188,10 @@ const Register = () => {
             />
           </div>
 
-          {/* Row 3: Role Specific Fields */}
+          {/* Row 3 & 4: Role Specific Fields */}
           {role === 'employer' ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 md:gap-3 2xl:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                 <RegisterForm.Field
                   label="Company Name"
                   icon={Building2}
@@ -205,32 +205,35 @@ const Register = () => {
                 <RegisterForm.Field
                   label="Industry"
                   icon={Briefcase}
-                  placeholder="e.g. Healthcare, Engineering, IT, Finance"
+                  placeholder="e.g. Healthcare, IT, Finance"
                   registration={register('industry')}
                   error={errors.industry?.message}
                 />
               </div>
 
-              <RegisterForm.PhoneField
-                label="Company Phone"
-                countryCode={countryCode}
-                onCountryCodeChange={setCountryCode}
-                registration={register('phone', {
-                  pattern: {
-                    value: /^[0-9\s-]{7,15}$/,
-                    message: 'Invalid phone number',
-                  },
-                })}
-                error={errors.phone?.message}
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                <RegisterForm.PhoneField
+                  label="Company Phone"
+                  countryCode={countryCode}
+                  onCountryCodeChange={setCountryCode}
+                  registration={register('phone', {
+                    pattern: {
+                      value: /^[0-9\s-]{7,15}$/,
+                      message: 'Invalid phone number',
+                    },
+                  })}
+                  error={errors.phone?.message}
+                />
+              </div>
             </>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 md:gap-3 2xl:gap-4 items-start">
+              {/* Row 3: Target Role / Headline + Department */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 items-start">
                 <RegisterForm.Field
-                  label="Professional Headline / Target Role"
+                  label="Target Role / Headline"
                   icon={Briefcase}
-                  placeholder="e.g. Civil Engineer, Pharmacist, MERN Developer"
+                  placeholder="e.g. Civil Engineer, MERN Dev"
                   registration={register('headline', {
                     required: role !== 'employer' ? 'Target role / headline is required' : false,
                     minLength: {
@@ -241,6 +244,33 @@ const Register = () => {
                   error={errors.headline?.message}
                 />
 
+                {/* Academic Discipline / Department */}
+                <div className="space-y-0.5">
+                  <label className="block text-[9.5px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+                    Academic Department
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
+                      <GraduationCap className="w-3.5 h-3.5" />
+                    </div>
+                    <select
+                      {...register('department')}
+                      className="w-full bg-white border border-slate-300 rounded-lg text-xs sm:text-[13px] text-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 pl-8 pr-7 py-1.5 sm:py-2 cursor-pointer appearance-none truncate"
+                    >
+                      <option value="Information Technology">💻 Computer Science & IT</option>
+                      <option value="Medical & Healthcare">🩺 Medical & Healthcare</option>
+                      <option value="Engineering & Construction">🏗️ Engineering & Construction</option>
+                      <option value="Business & Finance">📊 Business & Finance</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none text-slate-400">
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 4: Phone Number + Professional Skills */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 items-start">
                 <RegisterForm.PhoneField
                   label="Phone Number"
                   countryCode={countryCode}
@@ -254,38 +284,14 @@ const Register = () => {
                   error={errors.phone?.message}
                 />
 
-                {/* Academic Discipline / Department */}
-                <div className="space-y-0.5 2xl:space-y-1 sm:col-span-2">
-                  <label className="block text-[10px] 2xl:text-xs 3xl:text-sm font-semibold uppercase tracking-wider text-slate-600 mb-0.5 2xl:mb-1.5">
-                    Academic Discipline / Department
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-2.5 sm:pl-3 md:pl-3 2xl:pl-3.5 flex items-center pointer-events-none text-slate-400">
-                      <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4 md:h-4 2xl:w-4.5 2xl:h-4.5 3xl:w-5 3xl:h-5" />
-                    </div>
-                    <select
-                      {...register('department')}
-                      className="w-full bg-white border border-slate-300 rounded-lg 2xl:rounded-xl text-xs sm:text-sm md:text-sm 2xl:text-base 3xl:text-lg text-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 pl-8 sm:pl-9 md:pl-9 2xl:pl-10 3xl:pl-12 pr-8 2xl:pr-10 py-2 sm:py-2.5 md:py-2.5 2xl:py-2.5 3xl:py-3.5 cursor-pointer appearance-none"
-                    >
-                      <option value="Information Technology">💻 Computer Science & IT (Software, AI, Web)</option>
-                      <option value="Medical & Healthcare">🩺 Medical & Healthcare (Clinical, Pharmacy, Nursing)</option>
-                      <option value="Engineering & Construction">🏗️ Engineering & Construction (Civil, Mech, Electrical)</option>
-                      <option value="Business & Finance">📊 Business & Finance (Banking, Accounting, Marketing)</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 pr-2.5 sm:pr-3 md:pr-3 2xl:pr-3.5 flex items-center pointer-events-none text-slate-400">
-                      <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4 md:h-4 2xl:w-4.5 2xl:h-4.5 3xl:w-5 3xl:h-5" />
-                    </div>
-                  </div>
-                </div>
+                <RegisterForm.SkillPicker
+                  skills={skills}
+                  onAddSkill={handleAddSkill}
+                  onRemoveSkill={handleRemoveSkill}
+                  department={watch('department') || 'Information Technology'}
+                  label="Professional Skills"
+                />
               </div>
-
-              <RegisterForm.SkillPicker
-                skills={skills}
-                onAddSkill={handleAddSkill}
-                onRemoveSkill={handleRemoveSkill}
-                department={watch('department') || 'Information Technology'}
-                label="Professional Skills"
-              />
             </>
           )}
 
