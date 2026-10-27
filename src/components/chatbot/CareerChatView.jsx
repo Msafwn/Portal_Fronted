@@ -108,8 +108,6 @@ export const CareerChatView = () => {
                 </p>
               </div>
             </div>
-
-            
           </div>
         </div>
 
