@@ -218,4 +218,4 @@ export const PERSONA_OPTIONS = [
   { key: 'business', label: 'Finance', short: 'Fin', icon: '📊' },
 ];
 
-export { DASHBOARD_JOBS } from '../mock/dashboardMock';
+export const DASHBOARD_JOBS = [];
