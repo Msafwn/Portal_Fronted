@@ -204,24 +204,33 @@ const InterviewPrep = () => {
   return (
     <div className="max-w-5xl 2xl:max-w-6xl 4k:max-w-7xl mx-auto space-y-6 2xl:space-y-8 p-4 sm:p-6 lg:p-8">
       {/* Top Header Controls: History Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
-        <div>
-          <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-            <span>🎯</span> AI Mock Interview Prep
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Practice domain-specific questions with real-time AI scoring & database persistence.
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-200/60 flex items-center justify-center text-lg font-bold shrink-0">
+            🎯
+          </div>
+          <div>
+            <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              AI Mock Interview Prep
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                10 Questions
+              </span>
+            </h1>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Practice domain-specific questions with real-time AI scoring & instant feedback.
+            </p>
+          </div>
         </div>
         <button
+          type="button"
           onClick={() => {
             loadHistory();
             setShowHistory(true);
           }}
-          className="flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-blue-400 transition shrink-0"
+          className="flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:border-blue-400 transition shrink-0 cursor-pointer shadow-2xs"
         >
-          <Clock className="w-4 h-4 text-blue-500" />
-          <span>History ({history.length})</span>
+          <Clock className="w-4 h-4 text-blue-600" />
+          <span>Past Interviews ({history.length})</span>
         </button>
       </div>
 

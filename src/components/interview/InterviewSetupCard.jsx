@@ -56,57 +56,26 @@ const InterviewSetupCard = ({ onStartInterview, loading }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
-      {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0c2152] via-[#091b42] to-[#06122d] border border-blue-500/25 p-6 sm:p-8 md:p-10 text-white shadow-2xl shadow-blue-950/40">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 -mb-20 w-64 h-64 rounded-full bg-purple-500/10 blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 space-y-4 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold backdrop-blur-sm">
-            <Sparkles className="w-3.5 h-3.5 text-blue-400 animate-spin-slow" />
-            <span>Universal AI Mock Interview System — All 4 Disciplines</span>
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">
-            Crack Your Dream Career with{' '}
-            <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent">
-              AI Mock Interviews
-            </span>
-          </h1>
-
-          <p className="text-sm sm:text-base text-blue-100/80 leading-relaxed font-normal">
-            Tailored for <strong className="text-cyan-300">IT & Software</strong>, <strong className="text-emerald-300">Medical & Healthcare</strong>, <strong className="text-amber-300">Engineering</strong>, and <strong className="text-purple-300">Business & Finance</strong>. Practice 10 structured questions with real-time AI scoring!
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-blue-200/80 font-medium">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" /> 10 Structured Questions
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Zap className="w-4 h-4 text-amber-400" /> Real-time 0-10 AI Grading
-            </span>
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" /> Domain-Specific Evaluation
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-purple-400" /> ~15-20 Min Session
-            </span>
-          </div>
-        </div>
-      </div>
-
+    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
       {/* Role Selection Container */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-sm space-y-6">
+      <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-2xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <Briefcase className="w-5 h-5 text-blue-600" />
-              Select Your Target Discipline & Job Role
+              Select Target Discipline & Job Role
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              Choose your department below to practice targeted interview scenarios.
+              Choose your department below to practice targeted 10-question AI interview scenarios.
             </p>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 shrink-0">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <CheckCircle2 className="w-3.5 h-3.5" /> 10 Questions
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200">
+              <Zap className="w-3.5 h-3.5" /> Real-time AI Grading
+            </span>
           </div>
         </div>
 
