@@ -56,7 +56,7 @@ export const SkillPicker = ({
   onAddSkill,
   onRemoveSkill,
   department = '',
-  label = 'Professional Skills',
+  label = 'Key Skills (Optional)',
   maxSkills = 15,
   className = '',
 }) => {
@@ -94,7 +94,6 @@ export const SkillPicker = ({
     }
   };
 
-  // Resolve department key from prop or default to IT
   const deptKey = resolveDeptKey(department);
   const currentList = DEPARTMENT_SKILLS[deptKey] || DEPARTMENT_SKILLS.it;
   const quickSuggestions = currentList.filter(
@@ -102,94 +101,80 @@ export const SkillPicker = ({
   );
 
   return (
-    <div className={`space-y-1.5 2xl:space-y-3 ${className}`}>
+    <div className={`space-y-0.5 ${className}`}>
       {/* Label Row */}
       <div className="flex items-center justify-between">
         {label && (
-          <label className="block text-[10px] 2xl:text-xs 3xl:text-sm font-semibold uppercase tracking-wider text-slate-600">
+          <label className="block text-[10px] 2xl:text-xs font-semibold uppercase tracking-wider text-slate-600 mb-0.5">
             {label}
           </label>
         )}
         <span
-          className={`text-[9px] 2xl:text-xs 3xl:text-sm font-semibold transition-colors ${
-            isMax ? 'text-amber-600' : 'text-slate-400'
+          className={`text-[9px] 2xl:text-xs font-medium transition-colors ${
+            isMax ? 'text-amber-600 font-bold' : 'text-slate-400'
           }`}
         >
-          {skills.length}/{maxSkills} {isMax ? '(Max 15 reached)' : 'selected'}
+          {skills.length}/{maxSkills}
         </span>
       </div>
 
-      {/* Selected Skills Badges Area - ONLY rendered when skills exist */}
-      {skills.length > 0 && (
-        <div className="p-2 md:p-2.5 2xl:p-3 bg-slate-50/80 border border-slate-200 rounded-lg md:rounded-xl 2xl:rounded-xl max-h-20 md:max-h-24 2xl:max-h-32 overflow-y-auto flex flex-wrap gap-1.5 md:gap-2 2xl:gap-2 items-center">
-          {skills.map((skill) => (
-            <span
-              key={skill}
-              className="inline-flex items-center gap-1 md:gap-1.5 2xl:gap-1.5 px-2 md:px-2.5 2xl:px-3 py-1 md:py-1 2xl:py-1 rounded-md md:rounded-lg 2xl:rounded-lg text-[11px] md:text-xs 2xl:text-xs 3xl:text-sm font-medium bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs"
-            >
-              {skill}
-              <button
-                type="button"
-                onClick={() => onRemoveSkill(skill)}
-                className="hover:text-blue-900 transition-colors cursor-pointer p-0.5"
-                aria-label={`Remove ${skill}`}
-              >
-                <X className="w-3 h-3 md:w-3.5 md:h-3.5 2xl:w-3.5 2xl:h-3.5" />
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Text Input + Add Button (Single clean input row) */}
-      <div className="flex items-center gap-2 md:gap-2.5 2xl:gap-2.5">
+      {/* Input + Add Button */}
+      <div className="flex items-center gap-1.5">
         <input
           type="text"
           value={customInput}
           onChange={(e) => setCustomInput(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={isMax}
-          placeholder={
-            isMax
-              ? 'Maximum 15 skills reached'
-              : 'Type skill & press Enter or click suggestions below...'
-          }
-          className={`flex-1 border rounded-lg md:rounded-xl 2xl:rounded-xl text-xs sm:text-sm md:text-sm 2xl:text-base 3xl:text-lg px-2.5 sm:px-3 md:px-3.5 2xl:px-4 py-2 sm:py-2.5 md:py-2.5 2xl:py-2.5 3xl:py-3.5 focus:outline-none transition-colors ${
-            isMax
-              ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
-              : 'bg-white border-slate-300 text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:border-blue-600'
-          }`}
+          placeholder={isMax ? 'Max reached' : 'Type skill & press Enter'}
+          className="w-full bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 placeholder-slate-400 px-2.5 sm:px-3 py-1.5 sm:py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors"
         />
         <button
           type="button"
           onClick={handleManualAdd}
           disabled={!customInput.trim() || isMax}
-          className="px-3.5 sm:px-4 md:px-5 2xl:px-5 py-2 sm:py-2.5 md:py-2.5 2xl:py-2.5 3xl:py-3.5 text-xs sm:text-sm md:text-sm 2xl:text-base 3xl:text-lg font-semibold rounded-lg md:rounded-xl 2xl:rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 cursor-pointer shadow-xs"
+          className="px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 transition-colors shrink-0 cursor-pointer shadow-2xs"
         >
           Add
         </button>
       </div>
 
-      {/* Dynamic Department Skill Suggestions */}
-      {quickSuggestions.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1 2xl:gap-2 pt-0.5 2xl:pt-1">
-          <span className="text-[9px] 2xl:text-xs 3xl:text-sm font-semibold text-slate-400 uppercase tracking-wider shrink-0">
-            Suggested:
+      {/* Selected Skills Chips */}
+      {skills.length > 0 && (
+        <div className="flex flex-wrap gap-1 max-h-12 overflow-y-auto pt-0.5">
+          {skills.map((skill) => (
+            <span
+              key={skill}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200"
+            >
+              {skill}
+              <button
+                type="button"
+                onClick={() => onRemoveSkill(skill)}
+                className="hover:text-blue-900 cursor-pointer transition-colors"
+                aria-label={`Remove ${skill}`}
+              >
+                <X className="w-2.5 h-2.5" />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Quick Suggestions (Compact chips) */}
+      {skills.length < 3 && quickSuggestions.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1 pt-0.5">
+          <span className="text-[9px] text-slate-400 font-semibold uppercase shrink-0">
+            Add:
           </span>
-          {quickSuggestions.slice(0, 5).map((item) => (
+          {quickSuggestions.slice(0, 3).map((item) => (
             <button
               key={item.name}
               type="button"
               onClick={() => !isMax && onAddSkill(item.name)}
-              disabled={isMax}
-              className={`inline-flex items-center gap-0.5 2xl:gap-1 px-2 2xl:px-3 py-0.5 2xl:py-1 rounded 2xl:rounded-lg text-[10px] 2xl:text-xs 3xl:text-sm font-medium border border-slate-200 transition-colors shrink-0 ${
-                isMax
-                  ? 'opacity-40 cursor-not-allowed bg-slate-50 text-slate-400'
-                  : 'bg-slate-50 hover:bg-blue-50 hover:text-blue-700 text-slate-700 cursor-pointer'
-              }`}
+              className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 hover:bg-blue-50 hover:text-blue-600 text-slate-600 border border-slate-200 cursor-pointer transition-colors shrink-0"
             >
-              <Plus className="w-2.5 h-2.5 2xl:w-3.5 2xl:h-3.5 text-slate-400" />
-              <span>{item.name}</span>
+              +{item.name}
             </button>
           ))}
         </div>

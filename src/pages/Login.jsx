@@ -12,19 +12,12 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm();
 
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const handleQuickLogin = (email, password) => {
-    setValue('email', email, { shouldValidate: true });
-    setValue('password', password, { shouldValidate: true });
-    onSubmit({ email, password });
-  };
 
   const onSubmit = async (data) => {
     try {
@@ -59,39 +52,6 @@ const Login = () => {
       <LoginForm.RightPanel>
         <LoginForm.Header />
 
-        {/* Quick Demo Credentials Bar */}
-        <div className="mb-4 p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80">
-          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 mb-1.5 px-0.5">
-            <span>⚡ One-Click Demo Access</span>
-            <span className="text-blue-600 font-semibold">Live Database</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleQuickLogin('obaid@example.com', 'password123')}
-              className="py-1.5 px-2 rounded-xl bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 text-[11px] font-bold transition-all shadow-2xs text-center cursor-pointer disabled:opacity-50"
-            >
-              🎓 Candidate
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleQuickLogin('recruiter@techlogix.com', 'password123')}
-              className="py-1.5 px-2 rounded-xl bg-white hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 text-[11px] font-bold transition-all shadow-2xs text-center cursor-pointer disabled:opacity-50"
-            >
-              🏢 Employer
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={() => handleQuickLogin('admin@gmail.com', 'password123')}
-              className="py-1.5 px-2 rounded-xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purple-700 border border-slate-200 text-[11px] font-bold transition-all shadow-2xs text-center cursor-pointer disabled:opacity-50"
-            >
-              🛡️ Admin
-            </button>
-          </div>
-        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 2xl:space-y-5">
           <LoginForm.Field
             label="Email Address"
@@ -143,4 +103,3 @@ const Login = () => {
 };
 
 export default Login;
-

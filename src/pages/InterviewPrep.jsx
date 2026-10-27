@@ -221,7 +221,7 @@ const InterviewPrep = () => {
           className="flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-blue-400 transition shrink-0"
         >
           <Clock className="w-4 h-4 text-blue-500" />
-          <span>Past Interviews ({history.length})</span>
+          <span>History ({history.length})</span>
         </button>
       </div>
 
@@ -288,40 +288,38 @@ const InterviewPrep = () => {
       {/* Past Interviews History Modal */}
       {showHistory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 bg-slate-50/80">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+                <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
                   <Award className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-800 dark:text-white">
-                    Database Interview History
+                  <h3 className="text-base font-bold text-slate-900">
+                    History
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Your previous mock interviews & AI scorecards saved in MongoDB
+                  <p className="text-xs text-slate-500">
+                    Your previous mock interviews & scorecards
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowHistory(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="p-5 overflow-y-auto space-y-3 flex-1">
               {loadingHistory ? (
                 <div className="py-12 text-center text-sm text-slate-400">
-                  Loading history from database...
+                  Loading history...
                 </div>
               ) : history.length === 0 ? (
                 <div className="py-12 text-center">
                   <span className="text-4xl">📝</span>
-                  <p className="mt-3 text-sm font-medium text-slate-600 dark:text-slate-300">
+                  <p className="mt-3 text-sm font-semibold text-slate-700">
                     No past mock interviews found.
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
@@ -344,15 +342,15 @@ const InterviewPrep = () => {
                     <div
                       key={item._id}
                       onClick={() => handleResumePastInterview(item)}
-                      className="group p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-blue-50/30 dark:hover:bg-blue-950/20 transition cursor-pointer flex items-center justify-between gap-4"
+                      className="group p-4 rounded-2xl border border-slate-200 hover:border-blue-400 bg-slate-50/70 hover:bg-blue-50/40 transition cursor-pointer flex items-center justify-between gap-4"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <span className="text-2xl">{item.role?.icon || '💼'}</span>
                         <div className="min-w-0">
-                          <h4 className="text-sm font-bold text-slate-800 dark:text-white truncate">
+                          <h4 className="text-sm font-bold text-slate-900 truncate">
                             {item.role?.title || 'Mock Interview'}
                           </h4>
-                          <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                          <div className="flex items-center gap-3 text-xs text-slate-500 mt-0.5">
                             <span>{dateStr}</span>
                             <span>•</span>
                             <span className="capitalize">{item.status || 'completed'}</span>
@@ -364,7 +362,7 @@ const InterviewPrep = () => {
 
                       <div className="flex items-center gap-3 shrink-0">
                         <div className="text-right">
-                          <div className="text-base font-extrabold text-blue-600 dark:text-blue-400">
+                          <div className="text-base font-extrabold text-blue-600">
                             {item.averageScore || 0} / 10
                           </div>
                           <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400">
@@ -374,7 +372,7 @@ const InterviewPrep = () => {
                         <button
                           onClick={(e) => handleDeleteHistory(item._id, e)}
                           title="Delete session"
-                          className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition"
+                          className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -386,11 +384,10 @@ const InterviewPrep = () => {
               )}
             </div>
 
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex justify-end">
+            <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-end">
               <button
                 onClick={() => setShowHistory(false)}
-                className="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 transition"
+                className="px-4 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition cursor-pointer shadow-2xs"
               >
                 Close
               </button>
