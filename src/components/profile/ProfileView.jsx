@@ -23,6 +23,7 @@ export const ProfileView = ({
   experienceList,
   handleAddExperience,
   handleDeleteExperience,
+  serverAtsAnalysis,
   children,
   className = '',
 }) => {
@@ -39,6 +40,7 @@ export const ProfileView = ({
       experienceList={experienceList}
       handleAddExperience={handleAddExperience}
       handleDeleteExperience={handleDeleteExperience}
+      serverAtsAnalysis={serverAtsAnalysis}
     >
       <div className={`px-4 sm:px-6 lg:px-8 2xl:px-12 3xl:px-16 py-6 2xl:py-10 max-w-5xl 2xl:max-w-7xl 3xl:max-w-[1800px] 4k:max-w-[2200px] mx-auto space-y-6 2xl:space-y-10 ${className}`}>
         {children}

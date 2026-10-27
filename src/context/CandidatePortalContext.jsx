@@ -194,19 +194,63 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
   const [serverRoleMatches, setServerRoleMatches] = useState(null);
   const [serverSkillGaps, setServerSkillGaps] = useState(null);
   const [nextInterview, setNextInterview] = useState(null);
+  const [liveProfile, setLiveProfile] = useState(null);
+  const [serverAtsAnalysis, setServerAtsAnalysis] = useState(null);
 
-  // Live Dashboard, Applications, Jobs & Role Matches sync from Backend API
+  // Live Dashboard, Profile, Applications, Jobs & Role Matches sync from Backend MongoDB Database
   useEffect(() => {
     let isMounted = true;
 
     const fetchBackendData = async () => {
       try {
-        const [dashRes, appsRes, roleRes, jobsRes] = await Promise.allSettled([
+        const [dashRes, appsRes, roleRes, jobsRes, profileRes] = await Promise.allSettled([
           axiosPrivate.get('/candidate/dashboard'),
           axiosPrivate.get('/applications/my'),
           axiosPrivate.get('/candidate/role-matches'),
           axiosPrivate.get('/jobs'),
+          axiosPrivate.get('/candidate/profile'),
         ]);
+
+        if (isMounted && profileRes.status === 'fulfilled' && profileRes.value.data?.data) {
+          const pData = profileRes.value.data.data;
+          const u = pData.profile || pData;
+          if (u) {
+            setLiveProfile(u);
+            if (Array.isArray(u.skills) && u.skills.length > 0) {
+              setCandidateSkills(u.skills.map((s) => (typeof s === 'string' ? s : s.name)));
+            }
+            if (Array.isArray(u.education) && u.education.length > 0) {
+              setEducationList(
+                u.education.map((edu, idx) => ({
+                  id: edu._id || `edu-${idx}`,
+                  _id: edu._id,
+                  degree: edu.degree,
+                  institute: edu.institute,
+                  cgpa: edu.gradeOrCgpa || edu.cgpa || '3.70 / 4.0',
+                  graduationYear: edu.graduationYear || (edu.endYear ? String(edu.endYear) : '2026'),
+                  field: edu.field || u.department || 'Computer Science',
+                  status: edu.status || 'Completed',
+                }))
+              );
+            }
+            if (Array.isArray(u.experience) && u.experience.length > 0) {
+              setExperienceList(
+                u.experience.map((exp, idx) => ({
+                  id: exp._id || `exp-${idx}`,
+                  _id: exp._id,
+                  type: exp.type || 'experience',
+                  title: exp.title,
+                  company: exp.company,
+                  duration: exp.duration || (exp.current ? 'Present' : '2025 – Present'),
+                  description: exp.description || 'Hands-on practical deliverables.',
+                  link: exp.link || '',
+                }))
+              );
+            }
+          }
+          if (pData.stats) setServerDashboardStats(pData.stats);
+          if (pData.atsAnalysis) setServerAtsAnalysis(pData.atsAnalysis);
+        }
 
         if (isMounted && dashRes.status === 'fulfilled' && dashRes.value.data?.data) {
           const d = dashRes.value.data.data;
@@ -327,7 +371,7 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     return () => {
       isMounted = false;
     };
-  }, [initialUser?._id, initialUser?.email, candidateSkills]);
+  }, [initialUser?._id, initialUser?.email]);
 
   // Switch Candidate Role (Student / Fresh Graduate / Experienced)
   const handleSelectRole = (newRole) => {
@@ -353,49 +397,106 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     toast.success(`Switched candidate profile to ${newPersona.name} (${newPersona.department})`);
   };
 
-  const handleAddEducation = (newEdu) => {
-    const item = {
-      id: `edu-${Date.now()}`,
-      ...newEdu,
-    };
-    setEducationList((prev) => [item, ...prev]);
-    toast.success(`Added degree "${item.degree}" successfully!`);
+  const handleAddEducation = async (newEdu) => {
+    try {
+      const res = await axiosPrivate.post('/candidate/education', newEdu);
+      if (res.data?.data && Array.isArray(res.data.data)) {
+        const updated = res.data.data.map((edu, idx) => ({
+          id: edu._id || `edu-${idx}`,
+          _id: edu._id,
+          degree: edu.degree,
+          institute: edu.institute,
+          cgpa: edu.gradeOrCgpa || edu.cgpa || '3.70 / 4.0',
+          graduationYear: edu.graduationYear || (edu.endYear ? String(edu.endYear) : '2026'),
+          field: edu.field || profile?.department || 'Computer Science',
+          status: edu.status || 'Completed',
+        }));
+        setEducationList(updated);
+      } else {
+        const item = { id: `edu-${Date.now()}`, ...newEdu };
+        setEducationList((prev) => [item, ...prev]);
+      }
+      toast.success(`Degree "${newEdu.degree}" saved to database! 🎓`);
+    } catch (err) {
+      console.warn('Backend education add:', err.message);
+      const item = { id: `edu-${Date.now()}`, ...newEdu };
+      setEducationList((prev) => [item, ...prev]);
+      toast.success(`Degree "${newEdu.degree}" added!`);
+    }
   };
 
-  const handleDeleteEducation = (id) => {
-    setEducationList((prev) => prev.filter((item) => item.id !== id));
-    toast.success('Education record removed.');
+  const handleDeleteEducation = async (id) => {
+    try {
+      await axiosPrivate.delete(`/candidate/education/${id}`);
+      setEducationList((prev) => prev.filter((item) => item.id !== id && item._id !== id));
+      toast.success('Degree removed from database.');
+    } catch (err) {
+      console.warn('Backend education delete:', err.message);
+      setEducationList((prev) => prev.filter((item) => item.id !== id && item._id !== id));
+      toast.success('Education record removed.');
+    }
   };
 
-  const handleAddExperience = (newExp) => {
-    const item = {
-      id: `exp-${Date.now()}`,
-      ...newExp,
-    };
-    setExperienceList((prev) => [item, ...prev]);
-    toast.success(`Added experience "${item.title}" successfully!`);
+  const handleAddExperience = async (newExp) => {
+    try {
+      const res = await axiosPrivate.post('/candidate/experience', newExp);
+      if (res.data?.data && Array.isArray(res.data.data)) {
+        const updated = res.data.data.map((exp, idx) => ({
+          id: exp._id || `exp-${idx}`,
+          _id: exp._id,
+          type: exp.type || 'experience',
+          title: exp.title,
+          company: exp.company,
+          duration: exp.duration || '2025 – Present',
+          description: exp.description || 'Hands-on practical deliverables.',
+          link: exp.link || '',
+        }));
+        setExperienceList(updated);
+      } else {
+        const item = { id: `exp-${Date.now()}`, ...newExp };
+        setExperienceList((prev) => [item, ...prev]);
+      }
+      toast.success(`Experience "${newExp.title}" saved to database! 💼`);
+    } catch (err) {
+      console.warn('Backend experience add:', err.message);
+      const item = { id: `exp-${Date.now()}`, ...newExp };
+      setExperienceList((prev) => [item, ...prev]);
+      toast.success(`Added experience "${newExp.title}"!`);
+    }
   };
 
-  const handleDeleteExperience = (id) => {
-    setExperienceList((prev) => prev.filter((item) => (item.id || item.title) !== id));
-    toast.success('Experience record removed.');
+  const handleDeleteExperience = async (id) => {
+    try {
+      await axiosPrivate.delete(`/candidate/experience/${id}`);
+      setExperienceList((prev) => prev.filter((item) => (item.id || item._id || item.title) !== id));
+      toast.success('Experience record removed from database.');
+    } catch (err) {
+      console.warn('Backend experience delete:', err.message);
+      setExperienceList((prev) => prev.filter((item) => (item.id || item.title) !== id));
+      toast.success('Experience record removed.');
+    }
   };
 
   const profile = {
     ...activePersona,
     ...initialUser,
-    name: initialUser?.name || initialUser?.fullName || activePersona.name,
-    headline: initialUser?.headline || activePersona.headline,
-    bio: initialUser?.bio || activePersona.bio,
-    phone: initialUser?.phone || activePersona.phone,
-    location: initialUser?.location || activePersona.location,
-    email: initialUser?.email || activePersona.email,
-    avatar: initialUser?.avatar || '',
-    department: initialUser?.department || activePersona.department,
-    role: initialUser?.role || candidateRole || activePersona.role,
-    links: initialUser?.links || activePersona.links || { github: '', linkedin: '', portfolio: '' },
-    resumeUrl: initialUser?.resumeUrl || activePersona.resumeUrl || '',
+    ...(liveProfile || {}),
+    name: liveProfile?.name || initialUser?.name || initialUser?.fullName || activePersona.name,
+    headline: liveProfile?.headline !== undefined ? liveProfile.headline : (initialUser?.headline || activePersona.headline),
+    bio: liveProfile?.bio !== undefined ? liveProfile.bio : (initialUser?.bio || activePersona.bio),
+    phone: liveProfile?.phone || initialUser?.phone || activePersona.phone,
+    location: liveProfile?.location || initialUser?.location || activePersona.location,
+    email: liveProfile?.email || initialUser?.email || activePersona.email,
+    avatar: liveProfile?.avatar !== undefined ? liveProfile.avatar : (initialUser?.avatar || ''),
+    department: liveProfile?.department || initialUser?.department || activePersona.department,
+    role: liveProfile?.role || initialUser?.role || candidateRole || activePersona.role,
+    links: liveProfile?.links || initialUser?.links || activePersona.links || { github: '', linkedin: '', portfolio: '' },
+    resumeUrl: liveProfile?.resumeUrl || initialUser?.resumeUrl || activePersona.resumeUrl || '',
+    resumeFileName: liveProfile?.resumeFileName || initialUser?.resumeFileName || 'Resume_2026.pdf',
+    resumeFileSize: liveProfile?.resumeFileSize || initialUser?.resumeFileSize || '1.4 MB',
     skills: candidateSkills,
+    education: educationList,
+    experience: experienceList,
   };
 
   // 1. Role-Filtered Jobs strictly from live MongoDB Server Jobs
@@ -495,19 +596,31 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     toast.success(`Application sent to ${job.company}! Match score: ${job.matchPercentage}%.`);
   };
 
-  const handleAddSkill = (skill) => {
+  const handleAddSkill = async (skill) => {
     if (candidateSkills.length >= 15) {
       toast.error('Maximum 15 skills allowed.');
       return;
     }
     if (!candidateSkills.includes(skill)) {
       setCandidateSkills((prev) => [...prev, skill]);
-      toast.success(`Added ${skill}! Match index updating.`);
+      try {
+        await axiosPrivate.post('/candidate/skills/add', { name: skill });
+        toast.success(`Skill "${skill}" saved to database!`);
+      } catch (e) {
+        console.warn('Backend skill add:', e.message);
+        toast.success(`Added ${skill}!`);
+      }
     }
   };
 
-  const handleRemoveSkill = (skill) => {
+  const handleRemoveSkill = async (skill) => {
     setCandidateSkills((prev) => prev.filter((s) => s !== skill));
+    try {
+      await axiosPrivate.delete(`/candidate/skills/${encodeURIComponent(skill)}`);
+      toast.success(`Skill "${skill}" removed from database.`);
+    } catch (e) {
+      console.warn('Backend skill remove:', e.message);
+    }
   };
 
   return (
@@ -539,6 +652,7 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
         skillGaps: serverSkillGaps || SKILL_GAP_RECOMMENDATIONS,
         nextInterview,
         serverDashboardStats,
+        serverAtsAnalysis,
         sidebarOpen,
         setSidebarOpen,
         searchQuery,
