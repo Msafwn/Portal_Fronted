@@ -115,7 +115,6 @@ export const FloatingRecruiterCopilotWidget = () => {
       console.warn('[RecruiterCopilot] Live agent failed, using intelligent simulation:', err.message);
     }
 
-    // Graceful offline fallback
     setTimeout(() => {
       let aiReply = '';
       const lower = query.toLowerCase();
@@ -159,13 +158,12 @@ Bataiye, kis kaam se shuru karein?`;
   if (sidebarOpen) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-30 pointer-events-auto max-w-[calc(100vw-2rem)]">
-      {/* 1. Floating Launcher Button (When closed) */}
+    <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-30 pointer-events-auto max-w-[calc(100vw-1.5rem)]">
       {!isOpen && (
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="group flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-500 hover:to-violet-600 text-white font-semibold text-xs shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          className="group flex items-center gap-2 xs:gap-2.5 px-3.5 py-2.5 xs:px-4 xs:py-3 rounded-full bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-500 hover:to-violet-600 text-white font-semibold text-xs shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-105 active:scale-95 transition-all cursor-pointer"
         >
           <div className="relative">
             <Bot className="w-4 h-4" />
@@ -176,10 +174,8 @@ Bataiye, kis kaam se shuru karein?`;
         </button>
       )}
 
-      {/* 2. Sleek Responsive Modal Container (When open) */}
       {isOpen && (
-        <div className="w-[94vw] max-w-[420px] h-[500px] max-h-[calc(100vh-6rem)] bg-white border border-slate-200/90 rounded-2xl shadow-2xl shadow-indigo-950/25 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200">
-          {/* Header */}
+        <div className="w-[calc(100vw-1.5rem)] sm:w-[94vw] max-w-[420px] h-[480px] xs:h-[500px] max-h-[calc(100vh-5rem)] bg-white border border-slate-200/90 rounded-2xl shadow-2xl shadow-indigo-950/25 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200">
           <div className="px-4 py-3.5 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white flex items-center justify-between shrink-0 border-b border-indigo-900/40">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-300 shadow-xs">
@@ -218,7 +214,6 @@ Bataiye, kis kaam se shuru karein?`;
             </div>
           </div>
 
-          {/* Quick Prompts Carousel Bar */}
           <div className="px-3 py-2 bg-slate-50 border-b border-slate-200/80 overflow-x-auto no-scrollbar flex items-center gap-1.5 shrink-0">
             {quickPrompts.map((p) => {
               const IconComp = p.icon;
@@ -236,7 +231,6 @@ Bataiye, kis kaam se shuru karein?`;
             })}
           </div>
 
-          {/* Messages Feed Area */}
           <div className="flex-1 min-h-0 p-4 overflow-y-auto space-y-3 bg-slate-50/50 text-xs">
             {messages.map((m) => (
               <div
@@ -276,7 +270,6 @@ Bataiye, kis kaam se shuru karein?`;
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Clean Input Bar */}
           <form
             onSubmit={(e) => {
               e.preventDefault();

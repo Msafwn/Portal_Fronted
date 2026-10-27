@@ -1,4 +1,4 @@
-import react from '@vitejs/plugin-react'
+﻿import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
@@ -8,15 +8,22 @@ export default defineConfig({
     tailwindcss()
   ],
   server: {
+    host: true,
     port: 5173,
     proxy: {
       '/webhook': {
-        target: 'http://localhost:5678',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
         secure: false,
       },
+      '/pyapi': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/pyapi/, ''),
+      },
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
       }
