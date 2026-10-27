@@ -12,7 +12,7 @@ export const RegisterSubmit = ({
       type="submit"
       loading={loading}
       loadingText={loadingText}
-      className={`w-full mt-1 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg font-semibold ${className}`}
+      className={`w-full mt-1 py-1.5 text-xs sm:text-sm rounded-lg font-semibold ${className}`}
     >
       {text}
     </Button>
@@ -21,7 +21,7 @@ export const RegisterSubmit = ({
 
 export const RegisterFooter = ({ children, className = '' }) => {
   return (
-    <div className={`mt-2 pt-1.5 border-t border-slate-200 text-center text-[11px] text-slate-500 flex items-center justify-center gap-1 ${className}`}>
+    <div className={`mt-1.5 pt-1 border-t border-slate-200 text-center text-[10.5px] text-slate-500 flex items-center justify-center gap-1 ${className}`}>
       {children}
     </div>
   );

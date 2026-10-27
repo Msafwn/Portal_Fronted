@@ -142,7 +142,7 @@ export const SkillPicker = ({
       )}
 
       {/* Text Input + Add Button (Single clean input row) */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1">
         <input
           type="text"
           value={customInput}
@@ -151,10 +151,10 @@ export const SkillPicker = ({
           disabled={isMax}
           placeholder={
             isMax
-              ? 'Max 15 skills reached'
+              ? 'Max 15 reached'
               : 'Type skill & press Enter...'
           }
-          className={`flex-1 border rounded-lg text-xs px-2.5 py-1.5 focus:outline-none transition-colors ${
+          className={`flex-1 border rounded-lg text-xs px-2 py-1 focus:outline-none transition-colors ${
             isMax
               ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
               : 'bg-white border-slate-300 text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:border-blue-600'
@@ -164,25 +164,25 @@ export const SkillPicker = ({
           type="button"
           onClick={handleManualAdd}
           disabled={!customInput.trim() || isMax}
-          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 cursor-pointer"
+          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 cursor-pointer"
         >
           Add
         </button>
       </div>
 
-      {/* Dynamic Department Skill Suggestions */}
+      {/* Dynamic Department Skill Suggestions - Single line */}
       {quickSuggestions.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1 pt-0.5">
-          <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider shrink-0">
+        <div className="flex items-center gap-1 pt-0.5 overflow-hidden whitespace-nowrap">
+          <span className="text-[8.5px] font-semibold text-slate-400 uppercase tracking-wider shrink-0">
             Suggested:
           </span>
-          {quickSuggestions.slice(0, 4).map((item) => (
+          {quickSuggestions.slice(0, 3).map((item) => (
             <button
               key={item.name}
               type="button"
               onClick={() => !isMax && onAddSkill(item.name)}
               disabled={isMax}
-              className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9.5px] font-medium border border-slate-200 transition-colors shrink-0 ${
+              className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-medium border border-slate-200 transition-colors shrink-0 ${
                 isMax
                   ? 'opacity-40 cursor-not-allowed bg-slate-50 text-slate-400'
                   : 'bg-slate-50 hover:bg-blue-50 hover:text-blue-700 text-slate-700 cursor-pointer'

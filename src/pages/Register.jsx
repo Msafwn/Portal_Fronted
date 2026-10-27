@@ -116,9 +116,9 @@ const Register = () => {
           roles={ROLES}
         />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-1.5 sm:space-y-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-1 sm:space-y-1.5">
           {/* Row 1: Name & Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
             <RegisterForm.Field
               label="Full Name"
               icon={User}
@@ -152,7 +152,7 @@ const Register = () => {
           </div>
 
           {/* Row 2: Password & Confirm Password */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
             <RegisterForm.Field
               label="Password"
               icon={Lock}
@@ -191,7 +191,7 @@ const Register = () => {
           {/* Row 3 & 4: Role Specific Fields */}
           {role === 'employer' ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
                 <RegisterForm.Field
                   label="Company Name"
                   icon={Building2}
@@ -211,7 +211,7 @@ const Register = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
                 <RegisterForm.PhoneField
                   label="Company Phone"
                   countryCode={countryCode}
@@ -229,7 +229,7 @@ const Register = () => {
           ) : (
             <>
               {/* Row 3: Target Role / Headline + Department */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 items-start">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 items-start">
                 <RegisterForm.Field
                   label="Target Role / Headline"
                   icon={Briefcase}
@@ -246,16 +246,16 @@ const Register = () => {
 
                 {/* Academic Discipline / Department */}
                 <div className="space-y-0.5">
-                  <label className="block text-[9.5px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+                  <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
                     Academic Department
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none text-slate-400">
                       <GraduationCap className="w-3.5 h-3.5" />
                     </div>
                     <select
                       {...register('department')}
-                      className="w-full bg-white border border-slate-300 rounded-lg text-xs sm:text-[13px] text-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 pl-8 pr-7 py-1.5 sm:py-2 cursor-pointer appearance-none truncate"
+                      className="w-full bg-white border border-slate-300 rounded-lg text-xs text-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 pl-7 pr-6 py-1 sm:py-1.5 cursor-pointer appearance-none truncate"
                     >
                       <option value="Information Technology">💻 Computer Science & IT</option>
                       <option value="Medical & Healthcare">🩺 Medical & Healthcare</option>
@@ -270,7 +270,7 @@ const Register = () => {
               </div>
 
               {/* Row 4: Phone Number + Professional Skills */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 items-start">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 items-start">
                 <RegisterForm.PhoneField
                   label="Phone Number"
                   countryCode={countryCode}

@@ -71,9 +71,9 @@ const Control = forwardRef(
           autoComplete={autoComplete}
           {...restRegistration}
           {...props}
-          className={`w-full bg-white border rounded-lg text-xs sm:text-[13px] text-slate-800 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 ${
-            Icon ? 'pl-8 sm:pl-8.5' : 'pl-2.5'
-          } ${isPassword ? 'pr-8' : 'pr-2.5'} py-1.5 sm:py-2 ${
+          className={`w-full bg-white border rounded-lg text-xs text-slate-800 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 ${
+            Icon ? 'pl-7 sm:pl-7.5' : 'pl-2'
+          } ${isPassword ? 'pr-7' : 'pr-2'} py-1 sm:py-1.5 ${
             error ? 'border-rose-400 ring-1 ring-rose-400' : 'border-slate-300'
           } ${className}`}
         />
