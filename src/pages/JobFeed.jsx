@@ -23,7 +23,6 @@ export const JobFeed = () => {
       candidateRole={candidateRole}
       handleSelectRole={handleSelectRole}
     >
-      <JobFeedView.RoleSwitcher />
       <JobFeedView.HeroHeader />
       <JobFeedView.FiltersBar />
       <JobFeedView.Grid />
