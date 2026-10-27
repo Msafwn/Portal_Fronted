@@ -1,17 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Bot,
-  Sparkles,
-  Menu,
+Menu,
   X,
-  RefreshCw,
-  SlidersHorizontal,
-  GraduationCap,
-  ChevronDown,
   PanelLeftClose,
   PanelLeftOpen,
-  Home,
 } from 'lucide-react';
 import { useCareerChat } from '../../context/CareerChatContext';
 import { useCandidatePortal } from '../../context/CandidatePortalContext';
@@ -20,18 +13,12 @@ import { ChatInputBar } from './ChatInputBar';
 import { ChatSidebarHistory } from './ChatSidebarHistory';
 
 export const CareerChatView = () => {
-  const { messages, isThinking, typingStatus } = useCareerChat();
-  const { activePersona } = useCandidatePortal() || {};
-  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 1280;
-    }
-    return true;
-  });
+  const { messages, isThinking } = useCareerChat();
+  const { activePersona, setSidebarOpen } = useCandidatePortal() || {};
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -42,18 +29,18 @@ export const CareerChatView = () => {
 
   return (
     <div className="h-full w-full min-w-0 bg-white overflow-hidden flex flex-row relative">
-      {/* Desktop Left Sidebar History (Collapsible on wide screens) */}
+      {/* Desktop Chat History Sidebar */}
       <div
         className={`hidden lg:block h-full shrink-0 transition-[width,opacity] duration-300 ease-in-out overflow-hidden ${
           desktopSidebarOpen ? 'w-64 xl:w-72 opacity-100' : 'w-0 opacity-0 pointer-events-none'
         }`}
       >
         <div className="w-64 xl:w-72 h-full">
-          <ChatSidebarHistory onCollapse={() => setDesktopSidebarOpen(false)} />
+          <ChatSidebarHistory />
         </div>
       </div>
 
-      {/* Mobile & Tablet Drawer Overlay (Screens < 1024px) */}
+      {/* Mobile Drawer */}
       {mobileSidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden bg-slate-900/60 backdrop-blur-xs flex">
           <div className="w-72 max-w-[85vw] h-full bg-slate-900 animate-in slide-in-from-left duration-200 shadow-2xl flex flex-col">
@@ -77,11 +64,11 @@ export const CareerChatView = () => {
 
       {/* Main Conversation Stream */}
       <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-slate-50/50">
-        {/* Chat Stream Header */}
+        {/* Header */}
         <div className="p-3 sm:p-4 2xl:p-5 bg-white border-b border-slate-200/90 shrink-0 min-w-0">
           <div className="max-w-5xl 2xl:max-w-6xl 4k:max-w-7xl mx-auto flex items-center justify-between gap-2.5 w-full">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              {/* Sidebar toggle button (works on mobile, tablet, and desktop) */}
+              {/* Single toggle button for sidebar */}
               <button
                 type="button"
                 onClick={() => {
@@ -122,59 +109,22 @@ export const CareerChatView = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
-              {/* Back to Portal / Dashboard Link */}
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-xs 2xl:text-sm font-bold text-slate-700 border border-slate-200 transition-colors shadow-2xs"
-                title="Return to Dashboard"
-              >
-                <Home className="w-3.5 h-3.5 text-slate-600" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </Link>
-
-              {/* Model Status Pill */}
-              <div className="hidden md:flex items-center gap-2 text-xs 2xl:text-sm font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                <span className="whitespace-nowrap">Smart Career NLP v2.4</span>
-              </div>
-            </div>
+            
           </div>
         </div>
 
-        {/* Messages Feed Area */}
+        {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 2xl:p-8 space-y-2">
           <div className="max-w-5xl 2xl:max-w-6xl 4k:max-w-7xl mx-auto space-y-3">
             {messages.map((message) => (
               <ChatMessageItem key={message.id} message={message} />
             ))}
-
-            {/* Thinking / Typing Pulse */}
-            {isThinking && (
-              <div className="flex items-start gap-3 my-4">
-                <div className="w-9 h-9 2xl:w-11 2xl:h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                  <Bot className="w-5 h-5 2xl:w-6 2xl:h-6 animate-bounce" />
-                </div>
-
-                <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs text-xs 2xl:text-sm text-slate-600 flex items-center gap-2.5">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" />
-                  </div>
-                  <span className="font-semibold text-slate-500">
-                    {typingStatus || 'AI Counselor is formulating advice...'}
-                  </span>
-                </div>
-              </div>
-            )}
-
             <div ref={messagesEndRef} />
           </div>
         </div>
 
         {/* Input Bar */}
-        <div className="w-full bg-white border-t border-slate-200/90">
+        <div className="shrink-0 p-3 sm:p-4 2xl:p-6 bg-white border-t border-slate-200/90">
           <div className="max-w-5xl 2xl:max-w-6xl 4k:max-w-7xl mx-auto">
             <ChatInputBar />
           </div>

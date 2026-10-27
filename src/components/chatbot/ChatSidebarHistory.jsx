@@ -1,8 +1,8 @@
 import React from 'react';
-import { Plus, MessageSquare, Trash2, PanelLeftClose } from 'lucide-react';
+import { Plus, MessageSquare, Trash2 } from 'lucide-react';
 import { useCareerChat } from '../../context/CareerChatContext';
 
-export const ChatSidebarHistory = ({ onCloseMobile, onCollapse }) => {
+export const ChatSidebarHistory = ({ onCloseMobile }) => {
   const {
     sessions,
     activeSessionId,
@@ -23,16 +23,9 @@ export const ChatSidebarHistory = ({ onCloseMobile, onCollapse }) => {
           <MessageSquare className="w-4 h-4 text-blue-400" />
           <span className="text-xs font-bold text-white tracking-tight">Chat History</span>
         </div>
-        {onCollapse && (
-          <button
-            type="button"
-            onClick={onCollapse}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/80 cursor-pointer hidden lg:block transition-colors"
-            title="Collapse sidebar"
-          >
-            <PanelLeftClose className="w-4 h-4" />
-          </button>
-        )}
+        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700/60 font-semibold">
+          {sessions?.length || 0}
+        </span>
       </div>
 
       <div className="pt-3 pb-2">
@@ -50,15 +43,12 @@ export const ChatSidebarHistory = ({ onCloseMobile, onCollapse }) => {
       </div>
 
       <div className="flex-1 flex flex-col min-h-0 pt-2">
-        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-1 flex items-center justify-between">
-          <span>Conversations</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300">
-            {sessions.length}
-          </span>
+        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">
+          Conversations
         </div>
 
         <div className="flex-1 space-y-1 overflow-y-auto no-scrollbar pr-1">
-          {sessions.map((session) => {
+          {(sessions || []).map((session) => {
             const isActive = session.id === activeSessionId;
             return (
               <div
