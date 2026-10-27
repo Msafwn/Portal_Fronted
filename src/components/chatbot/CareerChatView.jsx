@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Bot,
   Sparkles,
@@ -10,6 +11,7 @@ import {
   ChevronDown,
   PanelLeftClose,
   PanelLeftOpen,
+  Home,
 } from 'lucide-react';
 import { useCareerChat } from '../../context/CareerChatContext';
 import { useCandidatePortal } from '../../context/CandidatePortalContext';
@@ -120,10 +122,22 @@ export const CareerChatView = () => {
               </div>
             </div>
 
-            {/* Model Status Pill */}
-            <div className="hidden sm:flex items-center gap-2 text-xs 2xl:text-sm font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-              <span className="whitespace-nowrap">Smart Career NLP v2.4</span>
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Back to Portal / Dashboard Link */}
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-xs 2xl:text-sm font-bold text-slate-700 border border-slate-200 transition-colors shadow-2xs"
+                title="Return to Dashboard"
+              >
+                <Home className="w-3.5 h-3.5 text-slate-600" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Link>
+
+              {/* Model Status Pill */}
+              <div className="hidden md:flex items-center gap-2 text-xs 2xl:text-sm font-semibold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
+                <Sparkles className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                <span className="whitespace-nowrap">Smart Career NLP v2.4</span>
+              </div>
             </div>
           </div>
         </div>

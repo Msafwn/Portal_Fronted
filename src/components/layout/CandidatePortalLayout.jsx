@@ -114,6 +114,22 @@ const CandidatePortalShell = () => {
     label: 'IT / Software',
     short: 'IT',
   };
+  const getDepartmentBadge = (deptStr) => {
+    const lower = (deptStr || '').toLowerCase();
+    if (lower.includes('med') || lower.includes('health') || lower.includes('pharm')) {
+      return { icon: '🩺', label: 'Medical & Healthcare' };
+    }
+    if (lower.includes('eng') || lower.includes('civil') || lower.includes('mech')) {
+      return { icon: '🏗️', label: 'Engineering' };
+    }
+    if (lower.includes('bus') || lower.includes('fin') || lower.includes('bank') || lower.includes('acc')) {
+      return { icon: '📊', label: 'Business & Finance' };
+    }
+    return { icon: '💻', label: 'IT / Software' };
+  };
+
+  const userDept = getDepartmentBadge(profile?.department);
+
 
   const navLinks = [
     {
@@ -444,224 +460,323 @@ const CandidatePortalShell = () => {
 
       {/* Main Right Wrapper */}
       <div className="flex-1 flex flex-col min-w-0 h-screen max-h-screen overflow-y-auto">
-        {/* TopBar with Tablet-friendly Hamburger + Persona Dropdown + Search + Status + Notifications + Profile */}
-        <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-2 xs:px-3 sm:px-6 h-16 flex items-center justify-between gap-1.5 sm:gap-3 shadow-2xs">
-          <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 min-w-0">
-            <button
-              type="button"
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer shrink-0"
-              aria-label="Open sidebar drawer"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-
-            {/* Global Search with ⌘K Badge */}
-            <div className="relative w-28 xs:w-36 sm:w-56 md:w-48 lg:w-72 xl:w-80">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 xs:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search jobs..."
-                className="w-full bg-slate-100/80 hover:bg-slate-100 border border-slate-200/90 rounded-xl text-xs text-slate-800 pl-7 xs:pl-8 pr-2 xs:pr-8 sm:pr-12 py-1.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600 transition-all shadow-2xs"
-              />
-              <span className="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 bg-white px-1.5 py-0.5 rounded border border-slate-200 shadow-2xs pointer-events-none">
-                ⌘K
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2.5">
-            {/* Multi-Department Target Field Selector Dropdown Pill */}
-            <div className="relative">
+        {/* TopBar with Hamburger + Department Pill + Search + Notifications + Profile (Hidden on AI Ask page per user request) */}
+        {!isChatPage && (
+          <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-2 xs:px-3 sm:px-6 h-16 flex items-center justify-between gap-1.5 sm:gap-3 shadow-2xs">
+            <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 min-w-0">
               <button
                 type="button"
-                onClick={() => setDeptDropdownOpen(!deptDropdownOpen)}
-                className="flex items-center gap-1.5 xs:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-slate-200/80 text-xs font-semibold text-slate-700 border border-slate-200 transition-all cursor-pointer shadow-2xs"
-                title={`Target Discipline: ${currentPersona.label}`}
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer shrink-0"
+                aria-label="Open sidebar drawer"
               >
-                <span className="text-sm leading-none">{currentPersona.icon}</span>
-                <span className="inline-block font-bold text-slate-800 max-w-[130px] truncate">
-                  {currentPersona.label}
+                <Menu className="w-5 h-5" />
+              </button>
+
+              {/* Global Search with ⌘K Badge */}
+              <div className="relative w-28 xs:w-36 sm:w-56 md:w-48 lg:w-72 xl:w-80">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 xs:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search jobs..."
+                  className="w-full bg-slate-100/80 hover:bg-slate-100 border border-slate-200/90 rounded-xl text-xs text-slate-800 pl-7 xs:pl-8 pr-2 xs:pr-8 sm:pr-12 py-1.5 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600 transition-all shadow-2xs"
+                />
+                <span className="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 bg-white px-1.5 py-0.5 rounded border border-slate-200 shadow-2xs pointer-events-none">
+                  ⌘K
                 </span>
-                <ChevronDown
-                  className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
-                    deptDropdownOpen ? 'rotate-180 text-blue-600' : ''
-                  }`}
-                />
-              </button>
-
-              {deptDropdownOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setDeptDropdownOpen(false)}
-                  />
-                  <div className="absolute right-0 mt-2 w-56 sm:w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3.5 py-2 border-b border-slate-100">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                        Select Target Field
-                      </span>
-                      {profile?.department && (
-                        <div className="text-[11px] text-slate-600 mt-1 flex items-center gap-1.5 truncate">
-                          <span className="text-slate-400 font-medium">Logged in as:</span>
-                          <span className="font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-[10px] border border-blue-200/60 truncate">
-                            {profile.department}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    {personaOptions.map((item) => {
-                      const isUserField = item.key === userPrimaryPersonaKey;
-                      const isSelected = activePersonaKey === item.key;
-                      return (
-                        <button
-                          key={item.key}
-                          type="button"
-                          onClick={() => {
-                            handleSelectPersona(item.key);
-                            setDeptDropdownOpen(false);
-                          }}
-                          className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-left transition-colors cursor-pointer ${
-                            isSelected
-                              ? 'bg-blue-50/80 text-blue-700 font-bold'
-                              : 'text-slate-700 hover:bg-slate-50'
-                          }`}
-                        >
-                          <span className="flex items-center gap-2 min-w-0">
-                            <span className="text-base">{item.icon}</span>
-                            <span className="truncate">{item.label}</span>
-                            {isUserField && (
-                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
-                                Your Field
-                              </span>
-                            )}
-                          </span>
-                          {isSelected && (
-                            <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
+              </div>
             </div>
 
-            {/* Authenticated User Profile Dropdown Pill */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 py-1 pr-1.5 sm:pr-2.5 rounded-xl hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all cursor-pointer group"
-                aria-label="User Account Menu"
-              >
-                <div className="relative">
-                  {profile.avatar && profile.avatar.trim() !== '' && !profile.avatar.includes('unsplash') ? (
-                    <img
-                      src={profile.avatar}
-                      alt={profile.name}
-                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-white shadow-2xs group-hover:scale-105 transition-transform"
-                    />
-                  ) : (
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-2xs">
-                      {profile.name?.charAt(0)?.toUpperCase() || 'U'}
-                    </div>
-                  )}
-                  <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
-                </div>
-                <div className="hidden sm:flex flex-col text-left leading-tight max-w-[150px] md:max-w-[190px] lg:max-w-[240px]">
-                  <span className="text-xs font-bold text-slate-800 group-hover:text-blue-600 transition-colors truncate">
-                    {profile.name}
+            <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-2.5">
+              {/* Multi-Department Target Field Selector Dropdown Pill */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setDeptDropdownOpen(!deptDropdownOpen)}
+                  className="flex items-center gap-1.5 xs:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-slate-200/80 text-xs font-semibold text-slate-700 border border-slate-200 transition-all cursor-pointer shadow-2xs"
+                  title={`Target Discipline: ${currentPersona.label}`}
+                >
+                  <span className="text-sm leading-none">{currentPersona.icon}</span>
+                  <span className="inline-block font-bold text-slate-800 max-w-[130px] truncate">
+                    {currentPersona.label}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-medium truncate">
-                    {profile.email || profile.department || 'Candidate'}
-                  </span>
-                </div>
-                <ChevronDown
-                  className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 hidden sm:block ${
-                    userDropdownOpen ? 'rotate-180 text-blue-600' : ''
-                  }`}
-                />
-              </button>
-
-              {userDropdownOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setUserDropdownOpen(false)}
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                      deptDropdownOpen ? 'rotate-180 text-blue-600' : ''
+                    }`}
                   />
-                  <div className="absolute right-0 mt-2 w-56 sm:w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white border border-slate-200 shadow-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    {/* Header info */}
-                    <div className="px-4 py-3 border-b border-slate-100">
-                      <p className="text-xs font-bold text-slate-900 truncate">{profile.name}</p>
-                      <p className="text-[11px] text-slate-500 truncate">{profile.email}</p>
-                      <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                        <Sparkles className="w-3 h-3 text-blue-600" />
-                        <span className="capitalize">{profile.role || 'Candidate'}</span>
+                </button>
+
+                {deptDropdownOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setDeptDropdownOpen(false)}
+                    />
+                    <div className="absolute right-0 mt-2 w-56 sm:w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      <div className="px-3.5 py-2 border-b border-slate-100">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                          Select Target Field
+                        </span>
+                        {profile?.department && (
+                          <div className="text-[11px] text-slate-600 mt-1 flex items-center gap-1.5 truncate">
+                            <span className="text-slate-400 font-medium">Logged in as:</span>
+                            <span className="font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-[10px] border border-blue-200/60 truncate">
+                              {profile.department}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      {personaOptions.map((item) => {
+                        const isUserField = item.key === userPrimaryPersonaKey;
+                        const isSelected = activePersonaKey === item.key;
+                        return (
+                          <button
+                            key={item.key}
+                            type="button"
+                            onClick={() => {
+                              handleSelectPersona(item.key);
+                              setDeptDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-left transition-colors cursor-pointer ${
+                              isSelected
+                                ? 'bg-blue-50/80 text-blue-700 font-bold'
+                                : 'text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span className="flex items-center gap-2 min-w-0">
+                              <span className="text-base">{item.icon}</span>
+                              <span className="truncate">{item.label}</span>
+                              {isUserField && (
+                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+                                  Your Field
+                                </span>
+                              )}
+                            </span>
+                            {isSelected && (
+                              <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Notification Bell with Dynamic Database Unread Badge */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setNotifDropdownOpen(!notifDropdownOpen)}
+                  className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-pointer"
+                  aria-label="Notifications"
+                >
+                  <Bell className="w-4 h-4" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-white">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {notifDropdownOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setNotifDropdownOpen(false)}
+                    />
+                    <div className="fixed sm:absolute left-2 right-2 sm:left-auto sm:right-0 mt-2 w-auto sm:w-96 max-w-[calc(100vw-1rem)] sm:max-w-md rounded-2xl bg-white border border-slate-200 shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-2">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 px-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-slate-900">Notifications</span>
+                          {unreadCount > 0 && (
+                            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
+                              {unreadCount} New
+                            </span>
+                          )}
+                        </div>
+                        {unreadCount > 0 && (
+                          <button
+                            type="button"
+                            onClick={handleMarkAllAsRead}
+                            className="text-[11px] font-semibold text-blue-600 hover:text-blue-700 transition cursor-pointer"
+                          >
+                            Mark all as read
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="max-h-72 overflow-y-auto space-y-1.5 pr-0.5">
+                        {notifications.length === 0 ? (
+                          <div className="py-8 text-center text-xs text-slate-400">
+                            <span className="text-2xl block mb-1.5">🔔</span>
+                            No notifications yet.
+                          </div>
+                        ) : (
+                          notifications.map((item) => (
+                            <div
+                              key={item._id}
+                              onClick={() => handleMarkAsRead(item._id, item.link)}
+                              className={`p-2.5 rounded-xl border text-xs transition cursor-pointer flex items-start gap-2.5 ${
+                                item.read
+                                  ? 'bg-slate-50/60 border-slate-100 text-slate-600 hover:bg-slate-100/70'
+                                  : 'bg-blue-50/70 border-blue-200/80 text-slate-900 hover:bg-blue-100/70 font-medium'
+                              }`}
+                            >
+                              <div className="mt-0.5 shrink-0">
+                                {item.type === 'job_match' ? (
+                                  <Zap className="w-3.5 h-3.5 text-amber-500" />
+                                ) : item.type === 'application_status' ? (
+                                  <Briefcase className="w-3.5 h-3.5 text-blue-500" />
+                                ) : item.type === 'interview_result' ? (
+                                  <GraduationCap className="w-3.5 h-3.5 text-emerald-500" />
+                                ) : (
+                                  <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-slate-900 truncate">{item.title}</p>
+                                <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">{item.message}</p>
+                                <span className="text-[9px] text-slate-400 block mt-1">
+                                  {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+                              {!item.read && (
+                                <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0 mt-1" />
+                              )}
+                            </div>
+                          ))
+                        )}
                       </div>
                     </div>
+                  </>
+                )}
+              </div>
 
-                    {/* Navigation Items */}
-                    <div className="py-1">
-                      <Link
-                        to="/profile"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
-                      >
-                        <User className="w-4 h-4 text-slate-400" />
-                        <span>My Profile & Skills</span>
-                      </Link>
-                      <Link
-                        to="/interview-prep"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
-                      >
-                        <GraduationCap className="w-4 h-4 text-slate-400" />
-                        <span>Mock Interview Prep</span>
-                      </Link>
-                      <Link
-                        to="/career-chat"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
-                      >
-                        <Bot className="w-4 h-4 text-slate-400" />
-                        <span>AI Career Advisor</span>
-                      </Link>
-                      <Link
-                        to="/applications"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
-                      >
-                        <Send className="w-4 h-4 text-slate-400" />
-                        <span>My Applications</span>
-                      </Link>
-                    </div>
-
-                    {/* Divider & Sign Out */}
-                    <div className="pt-1 border-t border-slate-100">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setUserDropdownOpen(false);
-                          onLogout();
-                        }}
-                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer text-left"
-                      >
-                        <LogOut className="w-4 h-4 text-rose-500" />
-                        <span>Sign Out</span>
-                      </button>
-                    </div>
+              {/* Authenticated User Profile Dropdown Pill */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 py-1 pr-1.5 sm:pr-2.5 rounded-xl hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all cursor-pointer group"
+                  aria-label="User Account Menu"
+                >
+                  <div className="relative">
+                    {profile.avatar && profile.avatar.trim() !== '' && !profile.avatar.includes('unsplash') ? (
+                      <img
+                        src={profile.avatar}
+                        alt={profile.name}
+                        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-white shadow-2xs group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-2xs">
+                        {profile.name?.charAt(0)?.toUpperCase() || 'U'}
+                      </div>
+                    )}
+                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
                   </div>
-                </>
-              )}
+                  <div className="hidden sm:flex flex-col text-left leading-tight max-w-[150px] md:max-w-[190px] lg:max-w-[240px]">
+                    <span className="text-xs font-bold text-slate-800 group-hover:text-blue-600 transition-colors truncate">
+                      {profile.name}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-medium truncate">
+                      {profile.email || profile.department || 'Candidate'}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 hidden sm:block ${
+                      userDropdownOpen ? 'rotate-180 text-blue-600' : ''
+                    }`}
+                  />
+                </button>
+
+                {userDropdownOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setUserDropdownOpen(false)}
+                    />
+                    <div className="absolute right-0 mt-2 w-56 sm:w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white border border-slate-200 shadow-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                      {/* Header info */}
+                      <div className="px-4 py-3 border-b border-slate-100">
+                        <p className="text-xs font-bold text-slate-900 truncate">{profile.name}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{profile.email}</p>
+                        <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            <Sparkles className="w-3 h-3 text-blue-600" />
+                            <span className="capitalize">{profile.role || 'Candidate'}</span>
+                          </div>
+                          {profile.department && (
+                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                              <span>{profile.department}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Navigation Items */}
+                      <div className="py-1">
+                        <Link
+                          to="/profile"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                        >
+                          <User className="w-4 h-4 text-slate-400" />
+                          <span>My Profile & Skills</span>
+                        </Link>
+                        <Link
+                          to="/interview-prep"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                        >
+                          <GraduationCap className="w-4 h-4 text-slate-400" />
+                          <span>Mock Interview Prep</span>
+                        </Link>
+                        <Link
+                          to="/career-chat"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                        >
+                          <Bot className="w-4 h-4 text-slate-400" />
+                          <span>AI Career Advisor</span>
+                        </Link>
+                        <Link
+                          to="/applications"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                        >
+                          <Send className="w-4 h-4 text-slate-400" />
+                          <span>My Applications</span>
+                        </Link>
+                      </div>
+
+                      {/* Divider & Sign Out */}
+                      <div className="pt-1 border-t border-slate-100">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            onLogout();
+                          }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer text-left"
+                        >
+                          <LogOut className="w-4 h-4 text-rose-500" />
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
+        )}
 
         {/* Page Content Rendered via Nested Routes */}
-        <main className={`flex-1 ${isChatPage ? 'h-[calc(100vh-4rem)] overflow-hidden flex flex-col' : 'pb-10 sm:pb-12'}`}>
+        <main className={`flex-1 ${isChatPage ? 'h-screen overflow-hidden flex flex-col' : 'pb-10 sm:pb-12'}`}>
           <Outlet />
         </main>
 
