@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import {
   INITIAL_EMPLOYER_COMPANY,
   INITIAL_EMPLOYER_RECRUITER,
-} from '../constants';
+} from '../constants/employerConstants';
 import { axiosPrivate } from '../services/apiClient';
 
 const EmployerPortalContext = createContext(null);
@@ -67,10 +67,10 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
     }
   }, [currentUser]);
 
-  // Active / Posted Jobs with Per-Job Seat Utilization
+  // Active / Posted Jobs from real MongoDB
   const [jobs, setJobs] = useState([]);
 
-  // High-Match Applicants Pool
+  // High-Match Applicants Pool from real MongoDB
   const [applicants, setApplicants] = useState([]);
 
   // Live Backend Employer Jobs & Applicants Synchronization
@@ -85,7 +85,7 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
 
         if (isMounted && jobsRes.status === 'fulfilled' && jobsRes.value.data?.data) {
           const jobList = jobsRes.value.data.data.jobs || jobsRes.value.data.data || [];
-          if (Array.isArray(jobList)) {
+          if (Array.isArray(jobList) && jobList.length > 0) {
             const mappedJobs = jobList.map((j) => {
               const rTarget = j.roleTarget || j.jobType || 'Entry-Level';
               const isIntern = rTarget.toLowerCase().includes('intern');
@@ -126,7 +126,7 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
 
         if (isMounted && appsRes.status === 'fulfilled' && appsRes.value.data?.data) {
           const appList = appsRes.value.data.data.applicants || appsRes.value.data.data || [];
-          if (Array.isArray(appList)) {
+          if (Array.isArray(appList) && appList.length > 0) {
             setApplicants(appList);
           }
         }
@@ -144,7 +144,7 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
     };
   }, [currentUser]);
 
-  // Notifications (dynamic state from backend)
+  // Notifications from real MongoDB
   const [notifications, setNotifications] = useState([]);
 
   // Derived KPI calculations

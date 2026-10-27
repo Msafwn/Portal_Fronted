@@ -217,3 +217,5 @@ export const PERSONA_OPTIONS = [
   { key: 'engineering', label: 'Engineering', short: 'Eng', icon: '🏗️' },
   { key: 'business', label: 'Finance', short: 'Fin', icon: '📊' },
 ];
+
+export { DASHBOARD_JOBS } from '../mock/dashboardMock';

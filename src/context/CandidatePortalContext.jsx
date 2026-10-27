@@ -4,7 +4,7 @@ import {
   DEPARTMENT_PROFILES,
   SKILL_GAP_RECOMMENDATIONS,
   PERSONA_OPTIONS,
-} from '../constants';
+} from '../constants/portalConstants';
 import { axiosPrivate } from '../services/apiClient';
 
 const CandidatePortalContext = createContext(null);
@@ -398,7 +398,7 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     skills: candidateSkills,
   };
 
-  // 1. Role-Filtered Jobs from live MongoDB Server Jobs
+  // 1. Role-Filtered Jobs strictly from live MongoDB Server Jobs
   const roleFilteredJobs = (serverJobs || []).filter((job) => {
     let matchesRole = false;
     if (candidateRole === 'student') {

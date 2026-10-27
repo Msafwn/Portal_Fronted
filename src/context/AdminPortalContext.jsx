@@ -11,7 +11,7 @@ import {
   INITIAL_AI_ALGORITHM_SETTINGS,
   ALGORITHM_PRESETS,
   INITIAL_SKILLS_TAXONOMY,
-} from '../constants';
+} from '../constants/adminConstants';
 import { exportFypAuditAndSecurityPdf } from '../utils/pdfExport';
 import { exportAuditLogsToCsv, exportLoginHistoryToCsv } from '../utils/excelExport';
 import { axiosPrivate } from '../services/apiClient';
@@ -104,7 +104,7 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
       const res = await axiosPrivate.get('/users/admin/all');
       if (res.data?.data) {
         const { candidates: serverCandidates, kpis: serverKpis } = res.data.data;
-        if (Array.isArray(serverCandidates)) {
+        if (Array.isArray(serverCandidates) && serverCandidates.length > 0) {
           setCandidates(serverCandidates);
         }
         if (serverKpis) {
@@ -137,7 +137,7 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
       const res = await axiosPrivate.get('/users/admin/employers');
       if (res.data?.data) {
         const { employers: serverEmployers, kpis: serverKpis } = res.data.data;
-        if (Array.isArray(serverEmployers)) {
+        if (Array.isArray(serverEmployers) && serverEmployers.length > 0) {
           setEmployers(serverEmployers);
         }
         if (serverKpis) {
@@ -169,7 +169,7 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
       const res = await axiosPrivate.get('/jobs/admin/all');
       if (res.data?.data) {
         const { jobs: serverJobs, kpis: serverKpis } = res.data.data;
-        if (Array.isArray(serverJobs)) {
+        if (Array.isArray(serverJobs) && serverJobs.length > 0) {
           setJobs(serverJobs);
         }
         if (serverKpis) {
