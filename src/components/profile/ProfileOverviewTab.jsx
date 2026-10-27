@@ -9,6 +9,8 @@ export const ProfileOverviewTab = ({ className = '' }) => {
     setBio,
     headline,
     setHeadline,
+    location,
+    setLocation,
     phone,
     setPhone,
     github,
@@ -51,15 +53,29 @@ export const ProfileOverviewTab = ({ className = '' }) => {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="text-xs font-semibold text-slate-700 block mb-1">
-                Headline
+                Headline / Target Role
               </label>
               <input
                 type="text"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
+                placeholder="e.g. MERN Developer"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-slate-700 block mb-1">
+                Location / City
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. Islamabad, Pakistan"
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
               />
             </div>
@@ -72,6 +88,7 @@ export const ProfileOverviewTab = ({ className = '' }) => {
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                placeholder="+92 300 1234567"
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
               />
             </div>
