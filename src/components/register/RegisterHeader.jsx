@@ -8,35 +8,36 @@ export const RegisterHeader = ({
   className = '',
 }) => {
   return (
-    <div className={`mb-2 sm:mb-2.5 lg:mb-2.5 2xl:mb-3.5 ${className}`}>
+    <div className={`mb-2.5 sm:mb-3 md:mb-4 lg:mb-4 2xl:mb-5 ${className}`}>
       {/* Brand Bar when left banner is hidden (< lg: tablets & phones) */}
-      <div className="flex items-center justify-between mb-2 lg:hidden">
+      <div className="flex items-center justify-between mb-3 md:mb-4 lg:hidden">
         <Link to="/" className="flex items-center gap-2 group">
           <img
             src="/logo.png"
             alt="Smart Career AI Logo"
-            className="w-6 h-6 rounded-lg object-contain shadow-xs"
+            className="w-7 h-7 md:w-8 md:h-8 rounded-lg object-contain shadow-xs"
           />
           <div className="flex flex-col">
-            <span className="text-sm font-extrabold text-slate-900 leading-tight">
+            <span className="text-sm md:text-base font-extrabold text-slate-900 leading-tight">
               Smart Career <span className="text-blue-600">AI</span>
             </span>
+            <span className="text-[10px] text-slate-500 font-medium hidden sm:block">Role Match & Recommendation</span>
           </div>
         </Link>
         <Link
           to="/"
-          className="text-xs font-semibold text-slate-500 hover:text-blue-600 flex items-center gap-1 transition-colors px-2 py-0.5 rounded-lg hover:bg-slate-100"
+          className="text-xs md:text-sm font-semibold text-slate-500 hover:text-blue-600 flex items-center gap-1 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" />
           <span>Home</span>
         </Link>
       </div>
 
-      <h2 className="text-lg sm:text-xl lg:text-2xl 2xl:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
+      <h2 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl 2xl:text-4xl 3xl:text-5xl font-bold tracking-tight text-slate-900">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-[11px] sm:text-xs 2xl:text-sm text-slate-500 mt-0.5">
+        <p className="text-xs sm:text-sm md:text-sm lg:text-base 2xl:text-base 3xl:text-lg text-slate-500 mt-1 2xl:mt-2">
           {subtitle}
         </p>
       )}

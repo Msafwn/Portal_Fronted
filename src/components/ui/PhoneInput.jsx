@@ -52,7 +52,7 @@ export const PhoneInput = forwardRef(
           <select
             value={countryCode}
             onChange={(e) => onCountryCodeChange && onCountryCodeChange(e.target.value)}
-            className="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold px-2 sm:px-2.5 border-r border-slate-200 focus:outline-none cursor-pointer transition-colors shrink-0 py-1.5 sm:py-2 2xl:py-2.5"
+            className="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs sm:text-sm md:text-sm 2xl:text-base 3xl:text-lg font-semibold px-2 sm:px-2.5 md:px-3 2xl:px-3 py-2 sm:py-2.5 md:py-2.5 2xl:py-2.5 3xl:py-3.5 border-r border-slate-200 focus:outline-none cursor-pointer transition-colors shrink-0"
             aria-label="Select Country Code"
           >
             {COUNTRIES.map((c) => (
@@ -69,7 +69,7 @@ export const PhoneInput = forwardRef(
             placeholder={selectedCountry.placeholder}
             {...registration}
             {...props}
-            className="w-full text-xs sm:text-sm text-slate-800 placeholder-slate-400 px-2.5 sm:px-3 py-1.5 sm:py-2 2xl:py-2.5 focus:outline-none bg-transparent"
+            className="w-full text-xs sm:text-sm md:text-sm 2xl:text-base 3xl:text-lg text-slate-800 placeholder-slate-400 px-2.5 sm:px-3 md:px-3 2xl:px-4 py-2 sm:py-2.5 md:py-2.5 2xl:py-2.5 3xl:py-3.5 focus:outline-none bg-transparent"
           />
         </div>
 

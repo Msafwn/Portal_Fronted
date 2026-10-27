@@ -71,9 +71,9 @@ const Control = forwardRef(
           autoComplete={autoComplete}
           {...restRegistration}
           {...props}
-          className={`w-full bg-white border rounded-lg 2xl:rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 ${
-            Icon ? 'pl-8 sm:pl-9 2xl:pl-10' : 'pl-2.5 sm:pl-3 2xl:pl-4'
-          } ${isPassword ? 'pr-8 sm:pr-9 2xl:pr-10' : 'pr-2.5 sm:pr-3 2xl:pr-4'} py-1.5 sm:py-2 2xl:py-2.5 ${
+          className={`w-full bg-white border rounded-lg 2xl:rounded-xl text-xs sm:text-sm md:text-sm 2xl:text-base 3xl:text-lg text-slate-800 placeholder-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 ${
+            Icon ? 'pl-8 sm:pl-9 md:pl-9 2xl:pl-10 3xl:pl-12' : 'pl-2.5 sm:pl-3 md:pl-3 2xl:pl-4'
+          } ${isPassword ? 'pr-8 sm:pr-9 md:pr-9 2xl:pr-10 3xl:pr-12' : 'pr-2.5 sm:pr-3 md:pr-3 2xl:pr-4'} py-2 sm:py-2.5 md:py-2.5 2xl:py-2.5 3xl:py-3.5 ${
             error ? 'border-rose-400 ring-1 ring-rose-400' : 'border-slate-300'
           } ${className}`}
         />
