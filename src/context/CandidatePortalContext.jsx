@@ -9,24 +9,89 @@ import { axiosPrivate } from '../services/apiClient';
 
 const CandidatePortalContext = createContext(null);
 
-export const CandidatePortalProvider = ({ children, initialUser, initialStats, onLogout }) => {
-  // Determine default persona based on user department
-  const getInitialPersonaKey = () => {
-    const dept = (initialUser?.department || '').toLowerCase();
-    if (dept.includes('med') || dept.includes('health') || dept.includes('pharm')) return 'medical';
-    if (dept.includes('eng') || dept.includes('civil') || dept.includes('mech')) return 'engineering';
-    if (dept.includes('bus') || dept.includes('fin') || dept.includes('bank') || dept.includes('acc')) return 'business';
-    return 'it';
-  };
+export const getPersonaKeyFromDept = (deptStr) => {
+  const dept = (deptStr || '').toLowerCase().trim();
+  if (!dept) return 'it';
 
-  const [activePersonaKey, setActivePersonaKey] = useState(getInitialPersonaKey);
+  // 1. Software / IT / Computer Science / Artificial Intelligence
+  if (
+    dept.includes('software') ||
+    dept.includes('computer') ||
+    dept.includes('information technology') ||
+    dept.includes('it ') ||
+    dept === 'it' ||
+    dept.includes('data science') ||
+    dept.includes('cyber') ||
+    dept.includes('web') ||
+    dept.includes('ai')
+  ) {
+    return 'it';
+  }
+
+  // 2. Medical / Healthcare / Pharmacy / Clinical
+  if (
+    dept.includes('med') ||
+    dept.includes('health') ||
+    dept.includes('pharm') ||
+    dept.includes('clinic') ||
+    dept.includes('doctor') ||
+    dept.includes('dent') ||
+    dept.includes('nurs') ||
+    dept.includes('biotech')
+  ) {
+    return 'medical';
+  }
+
+  // 3. Engineering (Civil, Mechanical, Electrical, Structural, Construction)
+  if (
+    dept.includes('civil') ||
+    dept.includes('mech') ||
+    dept.includes('electr') ||
+    dept.includes('construct') ||
+    dept.includes('struct') ||
+    dept.includes('architec') ||
+    dept.includes('telecom') ||
+    dept.includes('engineering')
+  ) {
+    return 'engineering';
+  }
+
+  // 4. Business / Finance / Banking / Accounts / Economics
+  if (
+    dept.includes('bus') ||
+    dept.includes('fin') ||
+    dept.includes('bank') ||
+    dept.includes('acc') ||
+    dept.includes('market') ||
+    dept.includes('commerc') ||
+    dept.includes('econ') ||
+    dept.includes('manage') ||
+    dept.includes('audit')
+  ) {
+    return 'business';
+  }
+
+  return 'it';
+};
+
+export const CandidatePortalProvider = ({ children, initialUser, initialStats, onLogout }) => {
+  // Determine primary persona key based on user's registered department
+  const userPrimaryPersonaKey = getPersonaKeyFromDept(initialUser?.department);
+
+  const [activePersonaKey, setActivePersonaKey] = useState(() => userPrimaryPersonaKey);
   const activePersona = DEPARTMENT_PROFILES[activePersonaKey] || DEPARTMENT_PROFILES.it;
 
   // Candidate Role: 'student' | 'fresh_graduate' | 'experienced'
-  const [candidateRole, setCandidateRole] = useState(
-    initialUser?.role === 'student' || initialUser?.role === 'experienced'
-      ? initialUser.role
-      : 'fresh_graduate'
+    const normalizeCandidateRole = (r) => {
+    if (!r) return 'fresh_graduate';
+    const lower = String(r).toLowerCase().trim();
+    if (lower === 'student') return 'student';
+    if (lower === 'experienced' || lower === 'professional') return 'experienced';
+    return 'fresh_graduate';
+  };
+
+  const [candidateRole, setCandidateRole] = useState(() =>
+    normalizeCandidateRole(initialUser?.role)
   );
   const [roleFilterTab, setRoleFilterTab] = useState('all');
 
@@ -78,11 +143,15 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     return activePersona.experience || [];
   });
 
-  // Sync state whenever real authenticated user updates in Redux
+  // Sync state whenever real authenticated user updates in Redux / cookie session
   useEffect(() => {
     if (!initialUser) return;
+    if (initialUser.department) {
+      const deptKey = getPersonaKeyFromDept(initialUser.department);
+      setActivePersonaKey(deptKey);
+    }
     if (initialUser.role) {
-      setCandidateRole(initialUser.role);
+      setCandidateRole(normalizeCandidateRole(initialUser.role));
     }
     if (initialUser.skills && initialUser.skills.length > 0) {
       setCandidateSkills(
@@ -114,7 +183,7 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
         }))
       );
     }
-  }, [initialUser]);
+  }, [initialUser?.department, initialUser?.role, initialUser?._id, initialUser?.email]);
 
   const [appliedJobIds, setAppliedJobIds] = useState([]);
   const [applicationsList, setApplicationsList] = useState([]);
@@ -321,7 +390,7 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     phone: initialUser?.phone || activePersona.phone,
     location: initialUser?.location || activePersona.location,
     email: initialUser?.email || activePersona.email,
-    avatar: initialUser?.avatar || activePersona.avatar,
+    avatar: initialUser?.avatar || '',
     department: initialUser?.department || activePersona.department,
     role: initialUser?.role || candidateRole || activePersona.role,
     links: initialUser?.links || activePersona.links || { github: '', linkedin: '', portfolio: '' },
@@ -475,6 +544,8 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
         searchQuery,
         setSearchQuery,
         personaOptions: PERSONA_OPTIONS,
+        userPrimaryPersonaKey,
+        userDepartmentName: initialUser?.department || profile.department,
         onLogout,
       }}
     >

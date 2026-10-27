@@ -52,6 +52,7 @@ const CandidatePortalShell = () => {
     searchQuery,
     setSearchQuery,
     personaOptions,
+    userPrimaryPersonaKey,
     onLogout,
   } = useCandidatePortal();
 
@@ -472,19 +473,21 @@ const CandidatePortalShell = () => {
           </div>
 
           <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2.5">
-            {/* Multi-Department Field Selector (Clean Modern Dropdown) */}
+            {/* Multi-Department Target Field Selector Dropdown Pill */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setDeptDropdownOpen(!deptDropdownOpen)}
-                className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 px-2 xs:px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-slate-200/80 text-xs font-semibold text-slate-700 border border-slate-200 transition-all cursor-pointer shadow-2xs"
-                title="Switch Target Industry Field"
+                className="flex items-center gap-1.5 xs:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-slate-200/80 text-xs font-semibold text-slate-700 border border-slate-200 transition-all cursor-pointer shadow-2xs"
+                title={`Target Discipline: ${currentPersona.label}`}
               >
                 <span className="text-sm leading-none">{currentPersona.icon}</span>
-                <span className="hidden sm:inline-block md:hidden xl:inline-block font-bold text-slate-800 max-w-[120px] truncate">{currentPersona.label}</span>
+                <span className="inline-block font-bold text-slate-800 max-w-[130px] truncate">
+                  {currentPersona.label}
+                </span>
                 <ChevronDown
                   className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
-                    deptDropdownOpen ? 'rotate-180' : ''
+                    deptDropdownOpen ? 'rotate-180 text-blue-600' : ''
                   }`}
                 />
               </button>
@@ -495,132 +498,52 @@ const CandidatePortalShell = () => {
                     className="fixed inset-0 z-40"
                     onClick={() => setDeptDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-52 sm:w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3 py-1.5 border-b border-slate-100">
+                  <div className="absolute right-0 mt-2 w-56 sm:w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-3.5 py-2 border-b border-slate-100">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                         Select Target Field
                       </span>
-                    </div>
-                    {personaOptions.map((item) => (
-                      <button
-                        key={item.key}
-                        type="button"
-                        onClick={() => {
-                          handleSelectPersona(item.key);
-                          setDeptDropdownOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-left transition-colors cursor-pointer ${
-                          activePersonaKey === item.key
-                            ? 'bg-blue-50 text-blue-700 font-bold'
-                            : 'text-slate-700 hover:bg-slate-50'
-                        }`}
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-sm">{item.icon}</span>
-                          <span>{item.label}</span>
-                        </span>
-                        {activePersonaKey === item.key && (
-                          <Check className="w-3.5 h-3.5 text-blue-600" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Algorithm Live Status Pill */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-semibold border border-emerald-200/80 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>AI Engine: <strong className="text-emerald-700 font-extrabold">50-30-20 Live</strong></span>
-            </div>
-
-            {/* Notification Bell with Dynamic Database Unread Badge */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setNotifDropdownOpen(!notifDropdownOpen)}
-                className="relative p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
-                title="Notifications"
-                aria-label="Notifications"
-              >
-                <Bell className="w-4 h-4" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-blue-600 text-white text-[10px] font-black rounded-full flex items-center justify-center ring-2 ring-white animate-pulse">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </button>
-
-              {notifDropdownOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setNotifDropdownOpen(false)}
-                  />
-                  <div className="fixed sm:absolute left-2 right-2 sm:left-auto sm:right-0 mt-2 w-auto sm:w-96 max-w-[calc(100vw-1rem)] sm:max-w-md rounded-2xl bg-white border border-slate-200 shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-2">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 px-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-900">Notifications</span>
-                        {unreadCount > 0 && (
-                          <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
-                            {unreadCount} New
+                      {profile?.department && (
+                        <div className="text-[11px] text-slate-600 mt-1 flex items-center gap-1.5 truncate">
+                          <span className="text-slate-400 font-medium">Logged in as:</span>
+                          <span className="font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-[10px] border border-blue-200/60 truncate">
+                            {profile.department}
                           </span>
-                        )}
-                      </div>
-                      {unreadCount > 0 && (
-                        <button
-                          type="button"
-                          onClick={handleMarkAllAsRead}
-                          className="text-[11px] font-semibold text-blue-600 hover:text-blue-700 transition cursor-pointer"
-                        >
-                          Mark all as read
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="max-h-72 overflow-y-auto space-y-1.5 pr-0.5">
-                      {notifications.length === 0 ? (
-                        <div className="py-8 text-center text-xs text-slate-400">
-                          <span className="text-2xl block mb-1.5">🔔</span>
-                          No notifications yet.
                         </div>
-                      ) : (
-                        notifications.map((item) => (
-                          <div
-                            key={item._id}
-                            onClick={() => handleMarkAsRead(item._id, item.link)}
-                            className={`p-2.5 rounded-xl border text-xs transition cursor-pointer flex items-start gap-2.5 ${
-                              item.read
-                                ? 'bg-slate-50/60 border-slate-100 text-slate-600 hover:bg-slate-100/70'
-                                : 'bg-blue-50/70 border-blue-200/80 text-slate-900 hover:bg-blue-100/70 font-medium'
-                            }`}
-                          >
-                            <div className="mt-0.5 shrink-0">
-                              {item.type === 'job_match' ? (
-                                <Zap className="w-3.5 h-3.5 text-amber-500" />
-                              ) : item.type === 'application_status' ? (
-                                <Briefcase className="w-3.5 h-3.5 text-blue-500" />
-                              ) : item.type === 'interview_result' ? (
-                                <GraduationCap className="w-3.5 h-3.5 text-emerald-500" />
-                              ) : (
-                                <Sparkles className="w-3.5 h-3.5 text-purple-500" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-slate-900 truncate">{item.title}</p>
-                              <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">{item.message}</p>
-                              <span className="text-[9px] text-slate-400 block mt-1">
-                                {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                            </div>
-                            {!item.read && (
-                              <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0 mt-1" />
-                            )}
-                          </div>
-                        ))
                       )}
                     </div>
+                    {personaOptions.map((item) => {
+                      const isUserField = item.key === userPrimaryPersonaKey;
+                      const isSelected = activePersonaKey === item.key;
+                      return (
+                        <button
+                          key={item.key}
+                          type="button"
+                          onClick={() => {
+                            handleSelectPersona(item.key);
+                            setDeptDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-left transition-colors cursor-pointer ${
+                            isSelected
+                              ? 'bg-blue-50/80 text-blue-700 font-bold'
+                              : 'text-slate-700 hover:bg-slate-50'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2 min-w-0">
+                            <span className="text-base">{item.icon}</span>
+                            <span className="truncate">{item.label}</span>
+                            {isUserField && (
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+                                Your Field
+                              </span>
+                            )}
+                          </span>
+                          {isSelected && (
+                            <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </>
               )}
@@ -635,7 +558,7 @@ const CandidatePortalShell = () => {
                 aria-label="User Account Menu"
               >
                 <div className="relative">
-                  {profile.avatar ? (
+                  {profile.avatar && profile.avatar.trim() !== '' && !profile.avatar.includes('unsplash') ? (
                     <img
                       src={profile.avatar}
                       alt={profile.name}
@@ -648,7 +571,7 @@ const CandidatePortalShell = () => {
                   )}
                   <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
                 </div>
-                <div className="hidden sm:flex flex-col text-left leading-tight max-w-[90px] md:max-w-[110px] lg:max-w-[140px]">
+                <div className="hidden sm:flex flex-col text-left leading-tight max-w-[150px] md:max-w-[190px] lg:max-w-[240px]">
                   <span className="text-xs font-bold text-slate-800 group-hover:text-blue-600 transition-colors truncate">
                     {profile.name}
                   </span>
@@ -793,6 +716,7 @@ export const CandidatePortalLayout = () => {
       name: 'Syed Hamza Ali',
       headline: 'Full Stack Developer & AI Role Explorer',
       role: 'student',
+      department: 'Information Technology',
       email: 'hamza.ali@example.com',
       skills: ['React', 'Node.js', 'MongoDB', 'Python', 'SQL', 'FastAPI', 'Tailwind CSS'],
     };

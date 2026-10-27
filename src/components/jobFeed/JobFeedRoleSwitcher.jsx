@@ -2,57 +2,53 @@ import React from 'react';
 import { useJobFeed } from './JobFeedContext';
 
 export const JobFeedRoleSwitcher = ({ className = '' }) => {
-  const { profile, candidateRole } = useJobFeed();
-
-  const rawRole = profile?.accountRole || (profile?.role === 'professional' ? 'experienced' : profile?.role) || candidateRole || 'student';
-  const userRole = String(rawRole).toLowerCase();
+  const { candidateRole } = useJobFeed();
 
   const roleMeta = {
     student: {
       label: 'Student',
       icon: '🎓',
-      scope: 'Curated Internships, Trainee Roles & Research Tracks',
+      track: 'Internships, Research & Part-Time Opportunities',
+      badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
     },
     fresh_graduate: {
       label: 'Fresh Graduate',
       icon: '🚀',
-      scope: 'Entry-Level Positions & High-Impact Career Tracks',
+      track: 'Entry-Level & Trainee Program Opportunities',
+      badgeClass: 'bg-indigo-50 text-indigo-700 border-indigo-200',
     },
     experienced: {
-      label: 'Experienced Professional',
+      label: 'Professional',
       icon: '💼',
-      scope: 'Mid-Senior Level Roles & Leadership Positions',
+      track: 'Mid & Senior-Level Career Opportunities',
+      badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    },
+    professional: {
+      label: 'Professional',
+      icon: '💼',
+      track: 'Mid & Senior-Level Career Opportunities',
+      badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     },
   };
 
-  const activeRoleInfo = roleMeta[userRole] || roleMeta.student;
+  const currentRole = roleMeta[candidateRole] || roleMeta.fresh_graduate;
 
   return (
-    <div
-      className={`p-3.5 sm:p-4 bg-white rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${className}`}
-    >
-      <div className="flex flex-wrap items-center gap-2.5">
-        <span className="text-xs font-bold text-slate-800 uppercase tracking-wider shrink-0">
-          Target Role Scope:
+    <div className={`p-3.5 sm:p-4 bg-white rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${className}`}>
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+          Candidate Role:
         </span>
-
-        {/* Single confirmed role from backend */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-xs">
-          <span>{activeRoleInfo.icon}</span>
-          <span>{activeRoleInfo.label}</span>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/20 text-white border border-white/20">
-            Account Role
-          </span>
-        </div>
-
-        <span className="text-[11px] text-slate-500 font-medium hidden md:inline">
-          • Filtered for {activeRoleInfo.scope}
+        <span className="text-xs text-slate-500 font-medium">
+          {currentRole.track}
         </span>
       </div>
-
-      <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200/80 shadow-2xs shrink-0 self-start sm:self-auto">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-        <span>Synchronized with Profile</span>
+      <div className="flex items-center gap-2">
+        <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-bold shadow-2xs ${currentRole.badgeClass}`}>
+          <span className="text-sm">{currentRole.icon}</span>
+          <span>{currentRole.label}</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-0.5 animate-pulse" />
+        </div>
       </div>
     </div>
   );
