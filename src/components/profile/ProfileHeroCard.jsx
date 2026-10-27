@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, CheckCircle2, Sparkles, Mail, Phone, MapPin } from 'lucide-react';
+import { Camera, Sparkles, Mail, Phone, MapPin } from 'lucide-react';
 import { useProfile } from './ProfileContext';
 
 export const ProfileHeroCard = ({ className = '' }) => {
@@ -84,16 +84,12 @@ export const ProfileHeroCard = ({ className = '' }) => {
           </div>
         </div>
 
-        {/* Candidate Name, Title, and Verification */}
+        {/* Candidate Name, Title */}
         <div className="space-y-1 2xl:space-y-2">
           <div className="flex items-center gap-2 2xl:gap-3 flex-wrap">
             <h1 className="text-2xl sm:text-3xl 2xl:text-4xl 3xl:text-5xl font-black text-slate-900">
               {profile.name}
             </h1>
-            <span className="inline-flex items-center gap-1 2xl:gap-1.5 px-2.5 2xl:px-4 py-0.5 2xl:py-1 rounded-full text-xs 2xl:text-base font-bold bg-blue-50 text-blue-700 border border-blue-200">
-              <CheckCircle2 className="w-3.5 h-3.5 2xl:w-5 2xl:h-5 text-blue-600" />
-              <span>Verified Candidate</span>
-            </span>
           </div>
 
           <p className="text-sm 2xl:text-lg 3xl:text-xl font-semibold text-slate-700">
