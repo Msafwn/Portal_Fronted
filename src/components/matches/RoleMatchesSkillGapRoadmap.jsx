@@ -1,11 +1,33 @@
 import React from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 import { useRoleMatches } from './RoleMatchesContext';
 
 export const RoleMatchesSkillGapRoadmap = ({ className = '' }) => {
-  const { skillGaps } = useRoleMatches();
+  const { skillGaps, jobs } = useRoleMatches();
 
-  if (!skillGaps || skillGaps.length === 0) return null;
+  // If there are no jobs in DB yet, do not render missing skills
+  if (jobs.length === 0) {
+    return null;
+  }
+
+  // If jobs exist and candidate already satisfies all required skills
+  if (!skillGaps || skillGaps.length === 0) {
+    return (
+      <div className={`bg-white rounded-2xl 2xl:rounded-3xl border border-slate-200 p-6 2xl:p-8 flex items-center gap-4 shadow-2xs ${className}`}>
+        <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0">
+          <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+        </div>
+        <div>
+          <h4 className="text-sm 2xl:text-base font-bold text-slate-900">
+            All Key Technical Skills Matched!
+          </h4>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Your candidate credentials currently satisfy all required competencies for these available vacancies.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`bg-white rounded-2xl 2xl:rounded-3xl border border-slate-200 p-6 2xl:p-9 3xl:p-10 space-y-4 2xl:space-y-6 shadow-2xs ${className}`}>
