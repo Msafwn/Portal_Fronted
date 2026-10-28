@@ -35,6 +35,8 @@ import {
 import { CareerChatProvider } from '../../context/CareerChatContext';
 import { FloatingCareerChatWidget } from '../chatbot';
 import { axiosPrivate } from '../../services/apiClient';
+import toast from 'react-hot-toast';
+import { connectSocket } from '../../services/socketService';
 
 // Inner Layout Shell
 const CandidatePortalShell = () => {
@@ -80,8 +82,61 @@ const CandidatePortalShell = () => {
   useEffect(() => {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 45000); // 45s background sync
+
+    // Connect WebSocket Real-time Notifications
+    let socketInstance = null;
+    if (profile?._id || profile?.id) {
+      socketInstance = connectSocket(profile);
+
+      const handleLiveNotification = (newNotif) => {
+        setNotifications((prev) => [newNotif, ...prev]);
+        setUnreadCount((prev) => prev + 1);
+
+        // Instant notification toast with actionable click
+        toast(
+          (t) => (
+            <div
+              onClick={() => {
+                if (newNotif.link) {
+                  navigate(newNotif.link);
+                }
+                toast.dismiss(t.id);
+              }}
+              className="cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-base">🔔</span>
+                <p className="font-bold text-sm text-slate-900">{newNotif.title || 'New Notification'}</p>
+              </div>
+              <p className="text-xs text-slate-600 mt-1 pl-6">{newNotif.message}</p>
+            </div>
+          ),
+          {
+            duration: 6000,
+            position: 'top-right',
+            style: {
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+              borderRadius: '16px',
+              padding: '12px 16px',
+            },
+          }
+        );
+      };
+
+      socketInstance.on('notification:new', handleLiveNotification);
+
+      return () => {
+        clearInterval(interval);
+        if (socketInstance) {
+          socketInstance.off('notification:new', handleLiveNotification);
+        }
+      };
+    }
+
     return () => clearInterval(interval);
-  }, []);
+  }, [profile?._id, profile?.id, navigate]);
 
   const handleMarkAsRead = async (id, link) => {
     try {

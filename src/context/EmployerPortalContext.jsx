@@ -5,6 +5,7 @@ import { selectCurrentUser, logOut } from '../store/slices/authSlice';
 import { useLogoutUserMutation } from '../store/api/authApiSlice';
 import toast from 'react-hot-toast';
 import { axiosPrivate } from '../services/apiClient';
+import { connectSocket } from '../services/socketService';
 
 const EmployerPortalContext = createContext(null);
 
@@ -72,9 +73,10 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
     let isMounted = true;
     const fetchEmployerData = async () => {
       try {
-        const [jobsRes, appsRes] = await Promise.allSettled([
+        const [jobsRes, appsRes, notifsRes] = await Promise.allSettled([
           axiosPrivate.get('/jobs/employer/my-jobs'),
           axiosPrivate.get('/applications/employer/all'),
+          axiosPrivate.get('/notifications'),
         ]);
 
         if (isMounted && jobsRes.status === 'fulfilled' && jobsRes.value.data?.data) {
@@ -124,6 +126,24 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
             setApplicants(appList);
           }
         }
+
+        if (isMounted && notifsRes?.status === 'fulfilled' && notifsRes.value.data?.data) {
+          const notifList = notifsRes.value.data.data.notifications || notifsRes.value.data.data || [];
+          if (Array.isArray(notifList) && notifList.length > 0) {
+            setNotifications(
+              notifList.map((n) => ({
+                id: n._id || n.id,
+                _id: n._id,
+                title: n.title,
+                message: n.message,
+                time: n.createdAt ? new Date(n.createdAt).toLocaleDateString() : 'Recently',
+                unread: !n.read,
+                category: n.type || 'general',
+                link: n.link,
+              }))
+            );
+          }
+        }
       } catch (err) {
         console.warn('Backend employer data note:', err.message);
       }
@@ -140,6 +160,69 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
 
   // Notifications from real MongoDB
   const [notifications, setNotifications] = useState([]);
+
+  // Live WebSocket Real-time Notifications for Employer
+  useEffect(() => {
+    if (!currentUser?._id && !currentUser?.id) return;
+
+    const socketInstance = connectSocket(currentUser);
+
+    const handleLiveNotification = (newNotif) => {
+      const formatted = {
+        id: newNotif._id || `notif-${Date.now()}`,
+        _id: newNotif._id,
+        title: newNotif.title,
+        message: newNotif.message,
+        time: 'Just now',
+        unread: true,
+        category: newNotif.type || 'general',
+        link: newNotif.link,
+      };
+
+      setNotifications((prev) => [formatted, ...prev]);
+
+      toast(
+        (t) => (
+          <div
+            onClick={() => {
+              if (newNotif.link) {
+                navigate(newNotif.link);
+              }
+              toast.dismiss(t.id);
+            }}
+            className="cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-base">🔔</span>
+              <p className="font-bold text-sm text-slate-900">{newNotif.title || 'New Notification'}</p>
+            </div>
+            <p className="text-xs text-slate-600 mt-1 pl-6">{newNotif.message}</p>
+          </div>
+        ),
+        {
+          duration: 6000,
+          position: 'top-right',
+          style: {
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+            borderRadius: '16px',
+            padding: '12px 16px',
+          },
+        }
+      );
+    };
+
+    if (socketInstance) {
+      socketInstance.on('notification:new', handleLiveNotification);
+    }
+
+    return () => {
+      if (socketInstance) {
+        socketInstance.off('notification:new', handleLiveNotification);
+      }
+    };
+  }, [currentUser?._id, currentUser?.id, navigate]);
 
   // Derived KPI calculations
   const kpiStats = useMemo(() => {
@@ -355,16 +438,29 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
   };
 
   // Notification Action: Mark Single as Read
-  const markNotificationAsRead = (notifId) => {
+  const markNotificationAsRead = async (notifId) => {
     setNotifications((prev) =>
-      prev.map((n) => (n.id === notifId ? { ...n, unread: false } : n))
+      prev.map((n) => (n.id === notifId || n._id === notifId ? { ...n, unread: false, read: true } : n))
     );
+    const realId = notifId;
+    if (realId && String(realId).length === 24) {
+      try {
+        await axiosPrivate.put(`/notifications/${realId}/read`);
+      } catch (e) {
+        console.warn('Failed to mark read on server:', e.message);
+      }
+    }
   };
 
   // Notification Action: Mark All as Read
-  const markAllNotificationsAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
-    toast.success('All notifications marked as read! ✓');
+  const markAllNotificationsAsRead = async () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false, read: true })));
+    try {
+      await axiosPrivate.put('/notifications/mark-all-read');
+      toast.success('All notifications marked as read! ✓');
+    } catch (e) {
+      console.warn('Failed to mark all read on server:', e.message);
+    }
   };
 
   // Notification Action: Delete Notification

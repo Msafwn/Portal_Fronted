@@ -16,6 +16,7 @@ import {
 import { exportFypAuditAndSecurityPdf } from '../utils/pdfExport';
 import { exportAuditLogsToCsv, exportLoginHistoryToCsv } from '../utils/excelExport';
 import { axiosPrivate } from '../services/apiClient';
+import { connectSocket } from '../services/socketService';
 
 const AdminPortalContext = createContext(null);
 
@@ -340,6 +341,69 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
 
   // Notifications
   const [notifications, setNotifications] = useState(INITIAL_ADMIN_NOTIFICATIONS);
+
+  // Live WebSocket Real-time Notifications for Admin
+  useEffect(() => {
+    if (!currentUser?._id && !currentUser?.id) return;
+
+    const socketInstance = connectSocket({ ...currentUser, role: 'admin' });
+
+    const handleLiveAdminNotification = (newNotif) => {
+      const formatted = {
+        id: newNotif._id || `notif-${Date.now()}`,
+        _id: newNotif._id,
+        title: newNotif.title,
+        message: newNotif.message,
+        time: 'Just now',
+        unread: true,
+        type: newNotif.type === 'error' ? 'alert' : 'info',
+        source: 'Real-time System Audit',
+      };
+
+      setNotifications((prev) => [formatted, ...prev]);
+
+      toast(
+        (t) => (
+          <div
+            onClick={() => {
+              if (newNotif.link) {
+                navigate(newNotif.link);
+              }
+              toast.dismiss(t.id);
+            }}
+            className="cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-base">🚨</span>
+              <p className="font-bold text-sm text-slate-900">{newNotif.title || 'Security / System Alert'}</p>
+            </div>
+            <p className="text-xs text-slate-600 mt-1 pl-6">{newNotif.message}</p>
+          </div>
+        ),
+        {
+          duration: 6000,
+          position: 'top-right',
+          style: {
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+            borderRadius: '16px',
+            padding: '12px 16px',
+          },
+        }
+      );
+    };
+
+    if (socketInstance) {
+      socketInstance.on('notification:new', handleLiveAdminNotification);
+    }
+
+    return () => {
+      if (socketInstance) {
+        socketInstance.off('notification:new', handleLiveAdminNotification);
+      }
+    };
+  }, [currentUser?._id, currentUser?.id, navigate]);
 
   // Action: Toggle Candidate Status (Active <-> Banned)
   const toggleCandidateStatus = async (id) => {
