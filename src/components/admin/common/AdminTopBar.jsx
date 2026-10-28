@@ -105,16 +105,22 @@ export const AdminTopBar = () => {
                     </span>
                   </div>
                   <div className="space-y-1.5 2xl:space-y-2 text-xs 2xl:text-sm max-h-64 2xl:max-h-80 overflow-y-auto">
-                    {notifications.map((n) => (
-                      <div
-                        key={n.id}
-                        className="p-2 2xl:p-3 rounded-xl 2xl:rounded-2xl bg-slate-50 border border-slate-100 hover:bg-blue-50/50 transition-colors"
-                      >
-                        <p className="font-semibold text-slate-900 text-xs 2xl:text-sm">{n.title}</p>
-                        <p className="text-[11px] 2xl:text-xs text-slate-500 mt-0.5 leading-snug">{n.message}</p>
-                        <span className="text-[10px] 2xl:text-xs text-slate-400 mt-1 block">{n.time}</span>
+                    {notifications.length === 0 ? (
+                      <div className="py-6 text-center text-slate-400 text-xs 2xl:text-sm">
+                        No new administrative notifications
                       </div>
-                    ))}
+                    ) : (
+                      notifications.map((n) => (
+                        <div
+                          key={n.id}
+                          className="p-2 2xl:p-3 rounded-xl 2xl:rounded-2xl bg-slate-50 border border-slate-100 hover:bg-blue-50/50 transition-colors"
+                        >
+                          <p className="font-semibold text-slate-900 text-xs 2xl:text-sm">{n.title}</p>
+                          <p className="text-[11px] 2xl:text-xs text-slate-500 mt-0.5 leading-snug">{n.message}</p>
+                          <span className="text-[10px] 2xl:text-xs text-slate-400 mt-1 block">{n.time}</span>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               </>

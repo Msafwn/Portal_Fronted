@@ -202,31 +202,35 @@ export const AdminEmployerDossierModal = ({
               <span>Submitted Verification Documents</span>
             </h4>
             <div className="space-y-1.5 2xl:space-y-2">
-              {employer.documents?.map((doc, idx) => (
-                <div
-                  key={idx}
-                  className="p-2.5 2xl:p-3.5 rounded-xl 2xl:rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-2"
-                >
-                  <div className="flex items-center gap-2 2xl:gap-3">
-                    {doc.verified ? (
-                      <CheckCircle2 className="w-4 h-4 2xl:w-5 2xl:h-5 text-emerald-600 shrink-0" />
-                    ) : (
-                      <AlertTriangle className="w-4 h-4 2xl:w-5 2xl:h-5 text-amber-500 shrink-0" />
-                    )}
-                    <span className="font-semibold text-slate-800 text-xs 2xl:text-sm 3xl:text-base">
-                      {doc.name}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={() => handleSimulateDocDownload(doc.name)}
-                    className="text-[11px] 2xl:text-xs 3xl:text-sm text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-1 cursor-pointer"
+              {(!employer.documents || employer.documents.length === 0) ? (
+                <p className="text-xs 2xl:text-sm text-slate-500 py-2">No verification documents submitted yet.</p>
+              ) : (
+                employer.documents.map((doc, idx) => (
+                  <div
+                    key={idx}
+                    className="p-2.5 2xl:p-3.5 rounded-xl 2xl:rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-2"
                   >
-                    <span>Inspect</span>
-                    <ExternalLink className="w-3 h-3 2xl:w-4 2xl:h-4" />
-                  </button>
-                </div>
-              ))}
+                    <div className="flex items-center gap-2 2xl:gap-3">
+                      {doc.verified ? (
+                        <CheckCircle2 className="w-4 h-4 2xl:w-5 2xl:h-5 text-emerald-600 shrink-0" />
+                      ) : (
+                        <AlertTriangle className="w-4 h-4 2xl:w-5 2xl:h-5 text-amber-500 shrink-0" />
+                      )}
+                      <span className="font-semibold text-slate-800 text-xs 2xl:text-sm 3xl:text-base">
+                        {doc.name}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => handleSimulateDocDownload(doc.name)}
+                      className="text-[11px] 2xl:text-xs 3xl:text-sm text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Inspect</span>
+                      <ExternalLink className="w-3 h-3 2xl:w-4 2xl:h-4" />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 

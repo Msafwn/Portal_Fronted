@@ -13,8 +13,12 @@ import toast from 'react-hot-toast';
 import { useAdminPortal } from '../../../context/AdminPortalContext';
 
 export const AdminSystemHealthCard = () => {
-  const { kpis } = useAdminPortal();
+  const { kpis, securityAlerts = [] } = useAdminPortal();
   const [isDiagnosing, setIsDiagnosing] = useState(false);
+
+  const activeThreatsCount = (securityAlerts || []).filter(
+    (a) => !a.status?.toLowerCase().includes('mitigated') && !a.status?.toLowerCase().includes('resolved')
+  ).length;
 
   const systemServices = [
     {
@@ -22,8 +26,8 @@ export const AdminSystemHealthCard = () => {
       name: 'AI Matching Engine',
       type: 'TF-IDF & Weighted Cosine Vectorizer',
       status: 'Operational',
-      health: '99.9%',
-      metric: `${kpis.avgMatchScore}% Match Precision`,
+      health: kpis.avgMatchScore ? `${kpis.avgMatchScore}% Match Precision` : '99.9%',
+      metric: kpis.totalAiMatches ? `${kpis.totalAiMatches} matches evaluated` : 'Online',
       icon: Cpu,
       color: 'emerald',
     },
@@ -33,7 +37,7 @@ export const AdminSystemHealthCard = () => {
       type: 'Primary Data Store & Replica Set',
       status: 'Connected',
       health: 'Optimal',
-      metric: '14ms query latency',
+      metric: 'Active cluster connection',
       icon: Database,
       color: 'emerald',
     },
@@ -42,8 +46,8 @@ export const AdminSystemHealthCard = () => {
       name: 'Node.js Express API Gateway',
       type: 'JWT Auth & Microservices Router',
       status: 'Active',
-      health: kpis.systemUptime,
-      metric: `${kpis.apiLatencyMs}ms average response`,
+      health: kpis.systemUptime || '99.9%',
+      metric: `${kpis.apiLatencyMs || 18}ms average response`,
       icon: Server,
       color: 'emerald',
     },
@@ -52,8 +56,8 @@ export const AdminSystemHealthCard = () => {
       name: 'Notification & Mailer Queue',
       type: 'Transactional Alerts & OTP Dispatcher',
       status: 'Operational',
-      health: '100%',
-      metric: '0 queue backlog',
+      health: 'Active',
+      metric: 'Dispatcher ready',
       icon: Mail,
       color: 'emerald',
     },
@@ -63,7 +67,7 @@ export const AdminSystemHealthCard = () => {
       type: 'IP Shield & Automated Abuse Prevention',
       status: 'Protected',
       health: 'Armed',
-      metric: '0 breach attempts',
+      metric: activeThreatsCount > 0 ? `${activeThreatsCount} active alerts` : '0 active threats',
       icon: ShieldCheck,
       color: 'blue',
     },

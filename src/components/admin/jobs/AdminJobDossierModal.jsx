@@ -79,14 +79,20 @@ export const AdminJobDossierModal = ({
         {/* Modal Header */}
         <div className="p-6 2xl:p-8 3xl:p-9 bg-slate-50 border-b border-slate-200/80 flex items-start justify-between gap-4">
           <div className="flex items-start gap-3.5 2xl:gap-5">
-            <img
-              src={job.companyLogo}
-              alt={job.company}
-              className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-200 shrink-0 mt-0.5"
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
-            />
+            {job.companyLogo ? (
+              <img
+                src={job.companyLogo}
+                alt={job.company}
+                className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-200 shrink-0 mt-0.5"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center shrink-0 mt-0.5">
+                <Building2 className="w-6 h-6 2xl:w-8 2xl:h-8" />
+              </div>
+            )}
             <div>
               <div className="flex items-center gap-2 2xl:gap-3 flex-wrap mb-1 2xl:mb-2">
                 <span className="px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs 3xl:text-sm font-bold bg-blue-100 text-blue-800 border border-blue-200">

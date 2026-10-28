@@ -69,10 +69,13 @@ export const AdminCandidateDossierModal = ({
                 src={candidate.avatar}
                 alt={candidate.name}
                 className="w-14 h-14 2xl:w-20 2xl:h-20 3xl:w-24 3xl:h-24 rounded-2xl object-cover border-2 border-white shadow-xs"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
               />
             ) : (
               <div className="w-14 h-14 2xl:w-20 2xl:h-20 3xl:w-24 3xl:h-24 rounded-2xl bg-blue-600 text-white font-bold text-lg 2xl:text-3xl flex items-center justify-center shadow-xs">
-                {candidate.name.charAt(0)}
+                {(candidate.name || 'C').charAt(0).toUpperCase()}
               </div>
             )}
             <div>
