@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Sparkles,
   ArrowRight,
@@ -19,45 +19,45 @@ import {
 import { useAdminPortal } from '../../../context/AdminPortalContext';
 import { Pagination } from '../../common/Pagination';
 
-const SIMULATED_CANDIDATES = [
+const BENCHMARK_ARCHETYPES = [
   {
-    id: 'sim-1',
-    name: 'Ayesha Khan',
-    type: 'Fresh Graduate (BS CS, FAST-NUCES)',
-    targetJob: 'Associate AI / NLP Engineer (TechLogix)',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120',
+    id: 'bench-fresh',
+    name: 'Fresh Graduate Archetype',
+    type: 'Entry Level Candidate (BS CS)',
+    targetJob: 'Associate Software Engineer',
+    avatar: '',
     scores: {
-      skill: 92, // Strong technical skills (Python, PyTorch, Transformers)
-      experience: 15, // Only 1 internship
-      education: 88, // 3.7 CGPA distinction
+      skill: 88,
+      experience: 20,
+      education: 85,
     },
-    note: 'When admin increases Skill Weight from 50% to 70%, Ayesha’s match score surges from 68% to 82% because her technical competence outweighs lack of corporate tenure!',
+    note: 'When Skill Weight is increased from 50% to 70%, match score improves because strong technical skills balance lack of corporate tenure.',
   },
   {
-    id: 'sim-2',
-    name: 'Hamza Tariq',
-    type: 'Experienced Professional (7+ Yrs Industry)',
-    targetJob: 'Principal Infrastructure Consultant (NESPAK)',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120',
+    id: 'bench-pro',
+    name: 'Senior Professional Archetype',
+    type: 'Experienced Professional (5+ Yrs Industry)',
+    targetJob: 'Senior Systems Architect',
+    avatar: '',
     scores: {
-      skill: 78, // Solid standard skills
-      experience: 96, // 7 years verified multi-company track record
-      education: 60, // Basic BSc degree from older curriculum
+      skill: 80,
+      experience: 95,
+      education: 70,
     },
-    note: 'When admin switches to Executive Mode (45% Experience), Hamza’s score climbs to top ranking based on seasoned industry delivery.',
+    note: 'When Experience Weight is increased, verified industry tenure drives the composite score to the top tier.',
   },
   {
-    id: 'sim-3',
-    name: 'Dr. Bilal Ahmed',
-    type: 'Postgraduate Researcher (MPhil / PhD Scholar)',
-    targetJob: 'Senior Clinical Research Fellow (Shifa)',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120',
+    id: 'bench-academic',
+    name: 'Academic Researcher Archetype',
+    type: 'Postgraduate Scholar (MS / PhD)',
+    targetJob: 'R&D Research Specialist',
+    avatar: '',
     scores: {
-      skill: 72, // Specialized lab skills
-      experience: 40, // University research assistant
-      education: 98, // Terminal PhD + published journals
+      skill: 75,
+      experience: 40,
+      education: 95,
     },
-    note: 'When Academic Excellence preset (45% Education) is applied, Dr. Bilal achieves highest placement.',
+    note: 'When Education Weight is prioritized, advanced degree credentials and academic distinctions elevate composite ranking.',
   },
 ];
 
@@ -71,13 +71,6 @@ const DISCIPLINES = [
 
 export const AdminAiLiveSimulator = () => {
   const { aiSettings, candidates = [] } = useAdminPortal();
-  const [selectedCandidate, setSelectedCandidate] = useState(SIMULATED_CANDIDATES[0]);
-
-  // Candidate roster search and pagination state
-  const [search, setSearch] = useState('');
-  const [selectedDiscipline, setSelectedDiscipline] = useState('ALL');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
 
   // Compute breakdown scores for any candidate
   const getCandidateScores = (cand) => {
@@ -93,6 +86,44 @@ export const AdminAiLiveSimulator = () => {
         : 78;
     return { skill, experience, education };
   };
+
+  // Build candidate choices from real candidates if available, otherwise generic benchmarks
+  const candidateOptions = useMemo(() => {
+    if (Array.isArray(candidates) && candidates.length > 0) {
+      return candidates.slice(0, 5).map((c, i) => {
+        const scores = getCandidateScores(c);
+        return {
+          id: c.id || c._id || `cand-${i}`,
+          name: c.name || `Candidate #${i + 1}`,
+          type: `${c.role === 'student' ? 'Student' : c.role === 'fresh_graduate' ? 'Fresh Graduate' : 'Professional'} • ${c.discipline || 'General'}`,
+          targetJob: c.targetRole || 'Target Vacancy',
+          avatar: c.avatar || '',
+          scores,
+          note: `Real candidate loaded from live database. Adjusted algorithm weights recalculate this candidate's match score in real time.`,
+        };
+      });
+    }
+    return BENCHMARK_ARCHETYPES;
+  }, [candidates]);
+
+  const [selectedCandidate, setSelectedCandidate] = useState(candidateOptions[0]);
+
+  // Sync selectedCandidate when candidateOptions changes
+  useEffect(() => {
+    if (candidateOptions.length > 0) {
+      setSelectedCandidate((prev) => {
+        if (!prev) return candidateOptions[0];
+        const match = candidateOptions.find((c) => c.id === prev.id);
+        return match || candidateOptions[0];
+      });
+    }
+  }, [candidateOptions]);
+
+  // Candidate roster search and pagination state
+  const [search, setSearch] = useState('');
+  const [selectedDiscipline, setSelectedDiscipline] = useState('ALL');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   const filteredCandidates = candidates.filter((cand) => {
     if (selectedDiscipline !== 'ALL' && cand.discipline !== selectedDiscipline) return false;
@@ -118,15 +149,15 @@ export const AdminAiLiveSimulator = () => {
 
   // Baseline 50 / 30 / 20 score calculation
   const baselineScore = Math.round(
-    selectedCandidate.scores.skill * 0.5 +
-      selectedCandidate.scores.experience * 0.3 +
-      selectedCandidate.scores.education * 0.2
+    (selectedCandidate?.scores?.skill || 80) * 0.5 +
+      (selectedCandidate?.scores?.experience || 50) * 0.3 +
+      (selectedCandidate?.scores?.education || 75) * 0.2
   );
 
   // Current live calibrated weights calculation
-  const currentSkillContr = selectedCandidate.scores.skill * (aiSettings.skillWeight / 100);
-  const currentExpContr = selectedCandidate.scores.experience * (aiSettings.experienceWeight / 100);
-  const currentEduContr = selectedCandidate.scores.education * (aiSettings.educationWeight / 100);
+  const currentSkillContr = (selectedCandidate?.scores?.skill || 80) * (aiSettings.skillWeight / 100);
+  const currentExpContr = (selectedCandidate?.scores?.experience || 50) * (aiSettings.experienceWeight / 100);
+  const currentEduContr = (selectedCandidate?.scores?.education || 75) * (aiSettings.educationWeight / 100);
   const liveScore = Math.round(currentSkillContr + currentExpContr + currentEduContr);
 
   const scoreDiff = liveScore - baselineScore;
@@ -156,8 +187,8 @@ export const AdminAiLiveSimulator = () => {
 
         {/* Candidate Selector Tabs */}
         <div className="flex items-center gap-1.5 2xl:gap-2.5 overflow-x-auto no-scrollbar py-1">
-          {SIMULATED_CANDIDATES.map((cand) => {
-            const isSelected = selectedCandidate.id === cand.id;
+          {candidateOptions.map((cand) => {
+            const isSelected = selectedCandidate?.id === cand.id;
             return (
               <button
                 key={cand.id}
@@ -182,17 +213,31 @@ export const AdminAiLiveSimulator = () => {
         <div className="xl:col-span-4 p-4 sm:p-5 2xl:p-7 3xl:p-8 rounded-2xl 2xl:rounded-3xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between space-y-4 2xl:space-y-6 min-w-0">
           <div>
             <div className="flex items-center gap-3 2xl:gap-4">
-              <img
-                src={selectedCandidate.avatar}
-                alt={selectedCandidate.name}
-                className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-300 shadow-2xs shrink-0"
-              />
+              {selectedCandidate?.avatar ? (
+                <img
+                  src={selectedCandidate.avatar}
+                  alt={selectedCandidate.name}
+                  className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-300 shadow-2xs shrink-0"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-bold flex items-center justify-center text-sm 2xl:text-lg 3xl:text-xl shadow-2xs shrink-0">
+                  {((selectedCandidate?.name || 'CD')
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map((w) => w[0])
+                    .join('') || 'CD').toUpperCase()}
+                </div>
+              )}
               <div className="min-w-0">
                 <h4 className="text-sm 2xl:text-lg 3xl:text-xl font-bold text-slate-900 truncate">
-                  {selectedCandidate.name}
+                  {selectedCandidate?.name}
                 </h4>
                 <p className="text-[11px] 2xl:text-xs 3xl:text-sm text-blue-600 font-semibold truncate">
-                  {selectedCandidate.type}
+                  {selectedCandidate?.type}
                 </p>
               </div>
             </div>
@@ -204,7 +249,7 @@ export const AdminAiLiveSimulator = () => {
                   <span>Skill Competency:</span>
                 </span>
                 <span className="font-extrabold text-blue-700 font-mono">
-                  {selectedCandidate.scores.skill}%
+                  {selectedCandidate?.scores?.skill || 0}%
                 </span>
               </div>
 
@@ -214,7 +259,7 @@ export const AdminAiLiveSimulator = () => {
                   <span>Work Experience:</span>
                 </span>
                 <span className="font-extrabold text-indigo-700 font-mono">
-                  {selectedCandidate.scores.experience}%
+                  {selectedCandidate?.scores?.experience || 0}%
                 </span>
               </div>
 
@@ -224,14 +269,14 @@ export const AdminAiLiveSimulator = () => {
                   <span>Academic Degree:</span>
                 </span>
                 <span className="font-extrabold text-purple-700 font-mono">
-                  {selectedCandidate.scores.education}%
+                  {selectedCandidate?.scores?.education || 0}%
                 </span>
               </div>
             </div>
           </div>
 
           <div className="p-3 2xl:p-4 bg-white rounded-xl 2xl:rounded-2xl border border-slate-200 text-[11px] 2xl:text-xs 3xl:text-sm text-slate-600 leading-relaxed font-medium">
-            💡 {selectedCandidate.note}
+            💡 {selectedCandidate?.note || 'Live algorithm simulation mode.'}
           </div>
         </div>
 
@@ -243,8 +288,8 @@ export const AdminAiLiveSimulator = () => {
               <span className="text-[10px] 2xl:text-xs 3xl:text-sm font-bold uppercase tracking-wider text-slate-400 block">
                 Target Simulated Vacancy
               </span>
-              <h4 className="text-sm 2xl:text-lg 3xl:text-xl font-bold text-slate-900 mt-0.5 truncate" title={selectedCandidate.targetJob}>
-                {selectedCandidate.targetJob}
+              <h4 className="text-sm 2xl:text-lg 3xl:text-xl font-bold text-slate-900 mt-0.5 truncate" title={selectedCandidate?.targetJob}>
+                {selectedCandidate?.targetJob}
               </h4>
             </div>
 
@@ -268,7 +313,7 @@ export const AdminAiLiveSimulator = () => {
                 {currentSkillContr.toFixed(1)}%
               </div>
               <p className="text-[11px] 2xl:text-xs 3xl:text-sm text-blue-950/70 mt-0.5 truncate">
-                {selectedCandidate.scores.skill}% × {aiSettings.skillWeight}% weight
+                {selectedCandidate?.scores?.skill || 0}% × {aiSettings.skillWeight}% weight
               </p>
             </div>
 
@@ -280,7 +325,7 @@ export const AdminAiLiveSimulator = () => {
                 {currentExpContr.toFixed(1)}%
               </div>
               <p className="text-[11px] 2xl:text-xs 3xl:text-sm text-indigo-950/70 mt-0.5 truncate">
-                {selectedCandidate.scores.experience}% × {aiSettings.experienceWeight}% weight
+                {selectedCandidate?.scores?.experience || 0}% × {aiSettings.experienceWeight}% weight
               </p>
             </div>
 
@@ -292,7 +337,7 @@ export const AdminAiLiveSimulator = () => {
                 {currentEduContr.toFixed(1)}%
               </div>
               <p className="text-[11px] 2xl:text-xs 3xl:text-sm text-purple-950/70 mt-0.5 truncate">
-                {selectedCandidate.scores.education}% × {aiSettings.educationWeight}% weight
+                {selectedCandidate?.scores?.education || 0}% × {aiSettings.educationWeight}% weight
               </p>
             </div>
           </div>

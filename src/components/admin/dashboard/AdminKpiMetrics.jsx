@@ -11,7 +11,7 @@ export const AdminKpiMetrics = () => {
       value: kpis.totalCandidates.toLocaleString(),
       suffix: null,
       subLabel: `${kpis.studentsCount} Students, ${kpis.graduatesCount} Grads, ${kpis.professionalsCount} Pros`,
-      tag: '+24% this month',
+      tag: kpis.totalCandidates > 0 ? `${kpis.totalCandidates} Total` : 'Live Roster',
       icon: Users,
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-600',

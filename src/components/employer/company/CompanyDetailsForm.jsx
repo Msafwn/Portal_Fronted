@@ -40,7 +40,7 @@ export const CompanyDetailsForm = ({ formData, onChangeField }) => {
             required
             value={formData.name || ''}
             onChange={(e) => onChangeField('name', e.target.value)}
-            placeholder="e.g. TechLogix Global Solutions"
+            placeholder="e.g. Acme Technologies"
             className="w-full px-3.5 py-2.5 2xl:px-4 2xl:py-3.5 bg-slate-50/80 border border-slate-200 rounded-xl 2xl:rounded-2xl text-xs 2xl:text-base text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all font-medium"
           />
         </div>

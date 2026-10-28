@@ -109,39 +109,47 @@ export const AdminRecentAuditLog = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {paginatedLogs.map((log) => (
-              <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
-                <td className="py-3 2xl:py-4 pr-3 font-bold text-slate-800 whitespace-nowrap">
-                  <div className="flex items-center gap-2 2xl:gap-2.5">
-                    {getStatusIcon(log.type)}
-                    <span>{log.action}</span>
-                  </div>
-                </td>
-                <td className="py-3 2xl:py-4 pr-3 text-slate-600 font-medium">
-                  {log.detail}
-                </td>
-                <td className="py-3 2xl:py-4 pr-3 text-slate-500 font-medium whitespace-nowrap">
-                  <span className="bg-slate-100 text-slate-700 px-2 py-0.5 2xl:px-3 2xl:py-1 rounded-md 2xl:rounded-lg font-semibold">
-                    {log.actor}
-                  </span>
-                </td>
-                <td className="py-3 2xl:py-4 pr-3 text-slate-400 font-medium whitespace-nowrap">
-                  <div className="flex items-center gap-1 2xl:gap-1.5">
-                    <Clock className="w-3 h-3 2xl:w-4 2xl:h-4 text-slate-400" />
-                    <span>{log.timestamp}</span>
-                  </div>
-                </td>
-                <td className="py-3 2xl:py-4 pl-3 text-right whitespace-nowrap">
-                  <span
-                    className={`inline-flex items-center px-2 py-0.5 2xl:px-3 2xl:py-1 rounded-full text-[10px] 2xl:text-xs 3xl:text-sm font-bold border ${getBadgeStyle(
-                      log.type
-                    )}`}
-                  >
-                    {log.type.toUpperCase()}
-                  </span>
+            {paginatedLogs.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="py-8 2xl:py-12 text-center text-slate-400 text-xs 2xl:text-sm 3xl:text-base">
+                  No verified audit trail operations recorded yet. Live actions will appear here.
                 </td>
               </tr>
-            ))}
+            ) : (
+              paginatedLogs.map((log) => (
+                <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
+                  <td className="py-3 2xl:py-4 pr-3 font-bold text-slate-800 whitespace-nowrap">
+                    <div className="flex items-center gap-2 2xl:gap-2.5">
+                      {getStatusIcon(log.type)}
+                      <span>{log.action}</span>
+                    </div>
+                  </td>
+                  <td className="py-3 2xl:py-4 pr-3 text-slate-600 font-medium">
+                    {log.detail}
+                  </td>
+                  <td className="py-3 2xl:py-4 pr-3 text-slate-500 font-medium whitespace-nowrap">
+                    <span className="bg-slate-100 text-slate-700 px-2 py-0.5 2xl:px-3 2xl:py-1 rounded-md 2xl:rounded-lg font-semibold">
+                      {log.actor}
+                    </span>
+                  </td>
+                  <td className="py-3 2xl:py-4 pr-3 text-slate-400 font-medium whitespace-nowrap">
+                    <div className="flex items-center gap-1 2xl:gap-1.5">
+                      <Clock className="w-3 h-3 2xl:w-4 2xl:h-4 text-slate-400" />
+                      <span>{log.timestamp}</span>
+                    </div>
+                  </td>
+                  <td className="py-3 2xl:py-4 pl-3 text-right whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 2xl:px-3 2xl:py-1 rounded-full text-[10px] 2xl:text-xs 3xl:text-sm font-bold border ${getBadgeStyle(
+                        log.type
+                      )}`}
+                    >
+                      {log.type.toUpperCase()}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

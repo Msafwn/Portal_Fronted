@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { selectCurrentUser, logOut } from '../store/slices/authSlice';
@@ -11,6 +11,7 @@ import {
   INITIAL_AI_ALGORITHM_SETTINGS,
   ALGORITHM_PRESETS,
   INITIAL_SKILLS_TAXONOMY,
+  INITIAL_ADMIN_NOTIFICATIONS,
 } from '../constants/adminConstants';
 import { exportFypAuditAndSecurityPdf } from '../utils/pdfExport';
 import { exportAuditLogsToCsv, exportLoginHistoryToCsv } from '../utils/excelExport';
@@ -104,7 +105,7 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
       const res = await axiosPrivate.get('/users/admin/all');
       if (res.data?.data) {
         const { candidates: serverCandidates, kpis: serverKpis } = res.data.data;
-        if (Array.isArray(serverCandidates) && serverCandidates.length > 0) {
+        if (Array.isArray(serverCandidates)) {
           setCandidates(serverCandidates);
         }
         if (serverKpis) {
@@ -137,7 +138,7 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
       const res = await axiosPrivate.get('/users/admin/employers');
       if (res.data?.data) {
         const { employers: serverEmployers, kpis: serverKpis } = res.data.data;
-        if (Array.isArray(serverEmployers) && serverEmployers.length > 0) {
+        if (Array.isArray(serverEmployers)) {
           setEmployers(serverEmployers);
         }
         if (serverKpis) {
@@ -169,7 +170,7 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
       const res = await axiosPrivate.get('/jobs/admin/all');
       if (res.data?.data) {
         const { jobs: serverJobs, kpis: serverKpis } = res.data.data;
-        if (Array.isArray(serverJobs) && serverJobs.length > 0) {
+        if (Array.isArray(serverJobs)) {
           setJobs(serverJobs);
         }
         if (serverKpis) {

@@ -1,11 +1,14 @@
 export const INITIAL_ADMIN_PROFILE = {
-  name: 'Muhammad Safwan',
-  role: 'Super Administrator & Lead Auditor',
-  email: 'safwanarshad782@gmail.com',
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-  department: 'System Architecture & Operations',
-  accessLevel: 'Tier-1 Root Access',
+  name: 'Platform Administrator',
+  role: 'Platform Administrator',
+  email: '',
+  avatar: '',
+  department: 'Administration',
+  accessLevel: 'Administrative Access',
 };
+
+export const INITIAL_ADMIN_NOTIFICATIONS = [];
+
 
 export const INITIAL_ADMIN_KPIS = {
   totalCandidates: 0,

@@ -53,7 +53,7 @@ export const SupportTicketForm = ({ className = '' }) => {
             <input
               type="email"
               disabled
-              value={profile?.email || currentUser?.email || 'safwanarshad782@gmail.com'}
+              value={profile?.email || currentUser?.email || ''}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-600 font-semibold cursor-not-allowed"
             />
           </div>

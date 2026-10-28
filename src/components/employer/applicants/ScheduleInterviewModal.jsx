@@ -13,7 +13,7 @@ export const ScheduleInterviewModal = ({
     date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     time: '11:00 AM',
     mode: 'Google Meet (Video Call)',
-    linkOrRoom: 'https://meet.google.com/xyz-recruiter-session',
+    linkOrRoom: '',
     agenda: 'Technical Competency & Cultural Fit Screening (Round 1)',
   });
 
@@ -21,7 +21,7 @@ export const ScheduleInterviewModal = ({
     if (applicant) {
       setFormData((prev) => ({
         ...prev,
-        candidateEmail: applicant.email || 'safwanarshad782@gmail.com',
+        candidateEmail: applicant.email || '',
       }));
     }
   }, [applicant]);
