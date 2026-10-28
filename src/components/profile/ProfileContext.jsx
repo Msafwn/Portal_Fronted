@@ -44,8 +44,15 @@ export const ProfileProvider = ({
   const [portfolio, setPortfolio] = useState(profile.links?.portfolio || '');
   const [uploadedResume, setUploadedResume] = useState(profile.resumeFileName || '');
   const [resumeSize, setResumeSize] = useState(profile.resumeFileSize || '');
+  const [resumeUrl, setResumeUrl] = useState(profile.resumeUrl || '');
+  const [liveAtsAnalysis, setLiveAtsAnalysis] = useState(serverAtsAnalysis || null);
   const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'education' | 'skills' | 'experience' | 'resume'
+
+  // Sync liveAtsAnalysis when prop changes
+  useEffect(() => {
+    if (serverAtsAnalysis) setLiveAtsAnalysis(serverAtsAnalysis);
+  }, [serverAtsAnalysis]);
 
   // Education modal & form state
   const [showEduModal, setShowEduModal] = useState(false);
@@ -77,6 +84,7 @@ export const ProfileProvider = ({
     setPortfolio(profile.links?.portfolio || '');
     setUploadedResume(profile.resumeFileName || '');
     setResumeSize(profile.resumeFileSize || '');
+    setResumeUrl(profile.resumeUrl || '');
   }, [profile]);
 
   const handleSaveEducation = (e) => {
@@ -177,10 +185,18 @@ export const ProfileProvider = ({
       });
       const data = res.data?.data;
       const fileName = data?.resumeFileName || file.name;
-      const fileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+      const fileSize = data?.resumeFileSize || `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+      const url = data?.resumeUrl || '';
       setUploadedResume(fileName);
       setResumeSize(fileSize);
-      toast.success(`Resume "${fileName}" uploaded and parsed by ATS engine in database! 📄`);
+      if (url) setResumeUrl(url);
+      if (data?.atsAnalysis) {
+        setLiveAtsAnalysis(data.atsAnalysis);
+      }
+      if (data?.user) {
+        dispatch(setCredentials({ user: data.user }));
+      }
+      toast.success(`Resume "${fileName}" uploaded & evaluated by AI ATS engine! 📄`);
     } catch (err) {
       console.warn('Backend resume upload fallback, saving metadata to profile:', err.message);
       const fileName = file.name;
@@ -195,6 +211,35 @@ export const ProfileProvider = ({
         }).unwrap();
       } catch {}
       toast.success(`Resume "${fileName}" synchronized with database!`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteResume = async () => {
+    setIsUploading(true);
+    try {
+      const res = await axiosPrivate.delete('/candidate/resume');
+      setUploadedResume('');
+      setResumeSize('');
+      setResumeUrl('');
+      if (res.data?.data?.atsAnalysis) {
+        setLiveAtsAnalysis(res.data.data.atsAnalysis);
+      }
+      toast.success('Resume file removed from profile.');
+    } catch (err) {
+      console.warn('Backend delete resume fallback:', err.message);
+      setUploadedResume('');
+      setResumeSize('');
+      setResumeUrl('');
+      try {
+        await updateCandidateProfileMutation({
+          resumeFileName: '',
+          resumeFileSize: '',
+          resumeUrl: '',
+        }).unwrap();
+      } catch {}
+      toast.success('Resume cleared.');
     } finally {
       setIsUploading(false);
     }
@@ -266,6 +311,7 @@ export const ProfileProvider = ({
     setPortfolio,
     uploadedResume,
     resumeSize,
+    resumeUrl,
     isUploading,
     activeTab,
     setActiveTab,
@@ -301,8 +347,11 @@ export const ProfileProvider = ({
     handleSaveExperience,
     handlePhotoUpload,
     handleResumeUpload,
+    handleDeleteResume,
     handleSave,
-    serverAtsAnalysis,
+    serverAtsAnalysis: liveAtsAnalysis || serverAtsAnalysis,
+    liveAtsAnalysis,
+    setLiveAtsAnalysis,
   };
 
   return (
