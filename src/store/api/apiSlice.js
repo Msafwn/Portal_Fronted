@@ -5,14 +5,16 @@ import { logOut } from '../slices/authSlice';
 const axiosBaseQuery =
   () =>
   async (args, api) => {
+    let isAuthCall = false;
     try {
       // Normalize args: can be string '/auth/me' or object { url, method, body }
       const requestConfig =
         typeof args === 'string' ? { url: args, method: 'GET' } : args;
       const { url, method = 'GET', body, data, params, headers } = requestConfig;
 
-      const isAuthCall =
-        url.includes('/auth/login') || url.includes('/auth/register');
+      isAuthCall = Boolean(
+        url && (url.includes('/auth/login') || url.includes('/auth/register'))
+      );
 
       const client = isAuthCall ? axiosPublic : axiosPrivate;
 

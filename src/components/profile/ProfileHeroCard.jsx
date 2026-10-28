@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Sparkles, Mail, Phone, MapPin } from 'lucide-react';
+import { Camera, Sparkles, Mail, Phone, MapPin, Globe, Link2 } from 'lucide-react';
 import { useProfile } from './ProfileContext';
 
 export const ProfileHeroCard = ({ className = '' }) => {
@@ -10,6 +10,9 @@ export const ProfileHeroCard = ({ className = '' }) => {
     headline,
     phone,
     location,
+    github,
+    linkedin,
+    portfolio,
     handlePhotoUpload,
   } = useProfile();
 
@@ -67,7 +70,7 @@ export const ProfileHeroCard = ({ className = '' }) => {
           <div className="flex items-center gap-3 2xl:gap-5">
             <div className="p-3.5 2xl:p-6 3xl:p-7 rounded-2xl 2xl:rounded-3xl bg-slate-50 border border-slate-200 text-center shrink-0">
               <span className="text-2xl 2xl:text-4xl 3xl:text-5xl font-black text-blue-600 block leading-tight">
-                {stats.matchIndex || 88}%
+                {stats.matchIndex || 0}%
               </span>
               <span className="text-[10px] 2xl:text-xs 3xl:text-sm text-slate-500 font-bold uppercase tracking-wider">
                 AI Fit Score
@@ -75,7 +78,7 @@ export const ProfileHeroCard = ({ className = '' }) => {
             </div>
             <div className="p-3.5 2xl:p-6 3xl:p-7 rounded-2xl 2xl:rounded-3xl bg-emerald-50 border border-emerald-200 text-center shrink-0">
               <span className="text-2xl 2xl:text-4xl 3xl:text-5xl font-black text-emerald-700 block leading-tight">
-                {stats.profileCompletion || profile.stats?.profileCompletion || 92}%
+                {stats.profileCompletion || 0}%
               </span>
               <span className="text-[10px] 2xl:text-xs 3xl:text-sm text-emerald-800 font-bold uppercase tracking-wider">
                 Profile Strength
@@ -92,26 +95,80 @@ export const ProfileHeroCard = ({ className = '' }) => {
             </h1>
           </div>
 
-          <p className="text-sm 2xl:text-lg 3xl:text-xl font-semibold text-slate-700">
-            {headline}
-          </p>
+          {headline && (
+            <p className="text-sm 2xl:text-lg 3xl:text-xl font-semibold text-slate-700">
+              {headline}
+            </p>
+          )}
 
-          <div className="flex items-center gap-4 2xl:gap-6 text-xs 2xl:text-base 3xl:text-lg text-slate-500 flex-wrap pt-1 2xl:pt-2">
-            <span className="flex items-center gap-1.5 2xl:gap-2">
-              <Mail className="w-3.5 h-3.5 2xl:w-5 2xl:h-5 text-slate-400" />
-              {profile.email}
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5 2xl:gap-2">
-              <Phone className="w-3.5 h-3.5 2xl:w-5 2xl:h-5 text-slate-400" />
-              {phone}
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5 2xl:gap-2">
-              <MapPin className="w-3.5 h-3.5 2xl:w-5 2xl:h-5 text-slate-400" />
-              {location}
-            </span>
+          <div className="flex items-center gap-3 2xl:gap-6 text-xs 2xl:text-base 3xl:text-lg text-slate-500 flex-wrap pt-1 2xl:pt-2">
+            {profile.email && (
+              <span className="flex items-center gap-1.5 2xl:gap-2">
+                <Mail className="w-3.5 h-3.5 2xl:w-5 2xl:h-5 text-slate-400" />
+                {profile.email}
+              </span>
+            )}
+            {phone && (
+              <>
+                <span>•</span>
+                <span className="flex items-center gap-1.5 2xl:gap-2">
+                  <Phone className="w-3.5 h-3.5 2xl:w-5 2xl:h-5 text-slate-400" />
+                  {phone}
+                </span>
+              </>
+            )}
+            {location && (
+              <>
+                <span>•</span>
+                <span className="flex items-center gap-1.5 2xl:gap-2">
+                  <MapPin className="w-3.5 h-3.5 2xl:w-5 2xl:h-5 text-slate-400" />
+                  {location}
+                </span>
+              </>
+            )}
           </div>
+
+          {/* Connected Social & Portfolio Quick Badges */}
+          {(github || linkedin || portfolio) && (
+            <div className="flex items-center gap-2 pt-1 flex-wrap">
+              {github && (
+                <a
+                  href={github.startsWith('http') ? github : `https://${github}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer"
+                  title="View GitHub Repository"
+                >
+                  <Globe className="w-3.5 h-3.5 text-slate-600" />
+                  <span>GitHub</span>
+                </a>
+              )}
+              {linkedin && (
+                <a
+                  href={linkedin.startsWith('http') ? linkedin : `https://${linkedin}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-blue-50 hover:bg-blue-100 text-blue-700 transition-colors border border-blue-200/80 cursor-pointer"
+                  title="View LinkedIn Profile"
+                >
+                  <Link2 className="w-3.5 h-3.5 text-blue-600" />
+                  <span>LinkedIn</span>
+                </a>
+              )}
+              {portfolio && (
+                <a
+                  href={portfolio.startsWith('http') ? portfolio : `https://${portfolio}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 transition-colors border border-emerald-200/80 cursor-pointer"
+                  title="View Portfolio Website"
+                >
+                  <Globe className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Portfolio</span>
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

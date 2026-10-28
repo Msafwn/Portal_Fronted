@@ -24,35 +24,33 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
   const [selectedRoleFilter, setSelectedRoleFilter] = useState('All');
 
   const getCompanyFromUser = (u) => {
-    const companyName = u?.companyProfile?.companyName || u?.name || INITIAL_EMPLOYER_COMPANY.name;
+    const companyName = u?.companyProfile?.companyName || u?.name || 'My Company';
     const words = companyName.trim().split(/\s+/);
     const logoInitials = words.length > 1
-      ? (words[0][0] + words[1][0]).toUpperCase()
+      ? (words[0][0] + (words[1] ? words[1][0] : '')).toUpperCase()
       : companyName.slice(0, 2).toUpperCase();
 
     return {
-      ...INITIAL_EMPLOYER_COMPANY,
       name: companyName,
-      industry: u?.companyProfile?.industry || INITIAL_EMPLOYER_COMPANY.industry,
-      tagline: u?.companyProfile?.tagline || INITIAL_EMPLOYER_COMPANY.tagline,
-      website: u?.companyProfile?.website || INITIAL_EMPLOYER_COMPANY.website,
-      about: u?.companyProfile?.description || u?.bio || INITIAL_EMPLOYER_COMPANY.about,
-      location: u?.location || INITIAL_EMPLOYER_COMPANY.location,
+      industry: u?.companyProfile?.industry || u?.department || '',
+      tagline: u?.companyProfile?.tagline || '',
+      website: u?.companyProfile?.website || '',
+      about: u?.companyProfile?.description || u?.bio || '',
+      location: u?.location || '',
       logoInitials: u?.companyProfile?.logoInitials || logoInitials,
-      verified: true,
-      tier: u?.companyProfile?.companySize || INITIAL_EMPLOYER_COMPANY.tier,
-      totalSeatsQuota: u?.companyProfile?.totalSeatsQuota || INITIAL_EMPLOYER_COMPANY.totalSeatsQuota,
-      filledSeatsCount: u?.companyProfile?.filledSeatsCount || INITIAL_EMPLOYER_COMPANY.filledSeatsCount,
+      verified: Boolean(u?.isVerified),
+      tier: u?.companyProfile?.companySize || 'Standard',
+      totalSeatsQuota: u?.companyProfile?.totalSeatsQuota || 0,
+      filledSeatsCount: u?.companyProfile?.filledSeatsCount || 0,
     };
   };
 
   const getRecruiterFromUser = (u) => ({
-    ...INITIAL_EMPLOYER_RECRUITER,
-    name: u?.name || INITIAL_EMPLOYER_RECRUITER.name,
-    email: u?.email || INITIAL_EMPLOYER_RECRUITER.email,
-    phone: u?.phone || INITIAL_EMPLOYER_RECRUITER.phone,
-    department: u?.department || INITIAL_EMPLOYER_RECRUITER.department,
-    role: u?.headline || INITIAL_EMPLOYER_RECRUITER.role,
+    name: u?.name || 'Recruiter',
+    email: u?.email || '',
+    phone: u?.phone || '',
+    department: u?.department || '',
+    role: u?.headline || 'Hiring Manager',
     avatar: u?.avatar || '',
   });
 

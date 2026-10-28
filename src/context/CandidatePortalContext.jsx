@@ -99,48 +99,39 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     if (initialUser?.skills && initialUser.skills.length > 0) {
       return initialUser.skills.map((s) => (typeof s === 'string' ? s : s.name));
     }
-    return activePersona.skills;
+    return [];
   });
-
-  const getInitialEducation = (persona) => [
-    {
-      id: 'edu-1',
-      degree: persona.education || 'Bachelor of Science',
-      institute: persona.institute || 'National University',
-      cgpa: persona.cgpa || '3.70 / 4.0',
-      graduationYear: persona.graduationYear || '2026',
-      field: persona.department || 'Computer Science',
-      status: 'In Progress / Completed',
-    },
-  ];
 
   const [educationList, setEducationList] = useState(() => {
     if (initialUser?.education && initialUser.education.length > 0) {
       return initialUser.education.map((edu, idx) => ({
         id: edu._id || `edu-${idx}`,
+        _id: edu._id,
         degree: edu.degree,
         institute: edu.institute,
-        cgpa: edu.gradeOrCgpa || edu.cgpa || '3.60 / 4.0',
-        graduationYear: edu.endYear ? String(edu.endYear) : '2026',
-        field: initialUser.department || 'Computer Science',
-        status: 'Completed',
+        cgpa: edu.gradeOrCgpa || edu.cgpa || '',
+        graduationYear: edu.graduationYear || (edu.endYear ? String(edu.endYear) : ''),
+        field: edu.field || initialUser.department || '',
+        status: edu.status || 'Completed',
       }));
     }
-    return getInitialEducation(activePersona);
+    return [];
   });
 
   const [experienceList, setExperienceList] = useState(() => {
     if (initialUser?.experience && initialUser.experience.length > 0) {
       return initialUser.experience.map((exp, idx) => ({
         id: exp._id || `exp-${idx}`,
-        type: 'experience',
+        _id: exp._id,
+        type: exp.type || 'experience',
         title: exp.title,
         company: exp.company,
-        duration: exp.current ? 'Present' : exp.startDate ? String(new Date(exp.startDate).getFullYear()) : '2025',
-        description: exp.description || 'Hands-on practical deliverables.',
+        duration: exp.duration || (exp.current ? 'Present' : exp.startDate ? String(new Date(exp.startDate).getFullYear()) : ''),
+        description: exp.description || '',
+        link: exp.link || '',
       }));
     }
-    return activePersona.experience || [];
+    return [];
   });
 
   // Sync state whenever real authenticated user updates in Redux / cookie session
@@ -387,14 +378,11 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
     });
   };
 
-  // Switch persona (IT, Medical, Engineering, Business)
+  // Switch target discipline filter (IT, Medical, Engineering, Business)
   const handleSelectPersona = (key) => {
     setActivePersonaKey(key);
     const newPersona = DEPARTMENT_PROFILES[key] || DEPARTMENT_PROFILES.it;
-    setCandidateSkills(newPersona.skills);
-    setEducationList(getInitialEducation(newPersona));
-    setExperienceList(newPersona.experience || []);
-    toast.success(`Switched candidate profile to ${newPersona.name} (${newPersona.department})`);
+    toast.success(`Target field filter set to ${newPersona.department}`);
   };
 
   const handleAddEducation = async (newEdu) => {
@@ -406,9 +394,9 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
           _id: edu._id,
           degree: edu.degree,
           institute: edu.institute,
-          cgpa: edu.gradeOrCgpa || edu.cgpa || '3.70 / 4.0',
-          graduationYear: edu.graduationYear || (edu.endYear ? String(edu.endYear) : '2026'),
-          field: edu.field || profile?.department || 'Computer Science',
+          cgpa: edu.gradeOrCgpa || edu.cgpa || '',
+          graduationYear: edu.graduationYear || (edu.endYear ? String(edu.endYear) : ''),
+          field: edu.field || profile?.department || '',
           status: edu.status || 'Completed',
         }));
         setEducationList(updated);
@@ -447,8 +435,8 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
           type: exp.type || 'experience',
           title: exp.title,
           company: exp.company,
-          duration: exp.duration || '2025 – Present',
-          description: exp.description || 'Hands-on practical deliverables.',
+          duration: exp.duration || (exp.current ? 'Present' : ''),
+          description: exp.description || '',
           link: exp.link || '',
         }));
         setExperienceList(updated);
@@ -478,22 +466,21 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
   };
 
   const profile = {
-    ...activePersona,
     ...initialUser,
     ...(liveProfile || {}),
-    name: liveProfile?.name || initialUser?.name || initialUser?.fullName || activePersona.name,
-    headline: liveProfile?.headline !== undefined ? liveProfile.headline : (initialUser?.headline || activePersona.headline),
-    bio: liveProfile?.bio !== undefined ? liveProfile.bio : (initialUser?.bio || activePersona.bio),
-    phone: liveProfile?.phone || initialUser?.phone || activePersona.phone,
-    location: liveProfile?.location || initialUser?.location || activePersona.location,
-    email: liveProfile?.email || initialUser?.email || activePersona.email,
+    name: liveProfile?.name || initialUser?.name || initialUser?.fullName || 'Candidate',
+    headline: liveProfile?.headline !== undefined ? liveProfile.headline : (initialUser?.headline || ''),
+    bio: liveProfile?.bio !== undefined ? liveProfile.bio : (initialUser?.bio || ''),
+    phone: liveProfile?.phone || initialUser?.phone || '',
+    location: liveProfile?.location || initialUser?.location || '',
+    email: liveProfile?.email || initialUser?.email || '',
     avatar: liveProfile?.avatar !== undefined ? liveProfile.avatar : (initialUser?.avatar || ''),
-    department: liveProfile?.department || initialUser?.department || activePersona.department,
-    role: liveProfile?.role || initialUser?.role || candidateRole || activePersona.role,
-    links: liveProfile?.links || initialUser?.links || activePersona.links || { github: '', linkedin: '', portfolio: '' },
-    resumeUrl: liveProfile?.resumeUrl || initialUser?.resumeUrl || activePersona.resumeUrl || '',
-    resumeFileName: liveProfile?.resumeFileName || initialUser?.resumeFileName || 'Resume_2026.pdf',
-    resumeFileSize: liveProfile?.resumeFileSize || initialUser?.resumeFileSize || '1.4 MB',
+    department: liveProfile?.department || initialUser?.department || '',
+    role: liveProfile?.role || initialUser?.role || candidateRole || 'fresh_graduate',
+    links: liveProfile?.links || initialUser?.links || { github: '', linkedin: '', portfolio: '' },
+    resumeUrl: liveProfile?.resumeUrl || initialUser?.resumeUrl || '',
+    resumeFileName: liveProfile?.resumeFileName || initialUser?.resumeFileName || '',
+    resumeFileSize: liveProfile?.resumeFileSize || initialUser?.resumeFileSize || '',
     skills: candidateSkills,
     education: educationList,
     experience: experienceList,
@@ -547,9 +534,20 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
   const finalDashboardJobs =
     departmentFilteredJobs.length > 0 ? departmentFilteredJobs : roleFilteredJobs;
 
+  const calcProfileCompletion = () => {
+    let score = 0;
+    if (profile.name) score += 20;
+    if (profile.headline) score += 10;
+    if (candidateSkills.length > 0) score += 25;
+    if (educationList.length > 0) score += 20;
+    if (experienceList.length > 0) score += 15;
+    if (profile.resumeUrl || profile.resumeFileName) score += 10;
+    return Math.min(score, 100);
+  };
+
   const stats = {
-    matchIndex: serverDashboardStats?.matchIndex ?? (finalDashboardJobs[0]?.matchPercentage || 88),
-    profileCompletion: serverDashboardStats?.profileCompletion ?? (candidateSkills.length > 0 ? 92 : 60),
+    matchIndex: serverDashboardStats?.matchIndex ?? (finalDashboardJobs[0]?.matchPercentage || 0),
+    profileCompletion: serverDashboardStats?.profileCompletion ?? calcProfileCompletion(),
     ...(initialStats || {}),
     ...(serverDashboardStats || {}),
     totalRecommended: serverDashboardStats?.totalRecommended ?? finalDashboardJobs.length,
@@ -649,7 +647,7 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
         handleDeleteExperience,
         jobs: serverRoleMatches || finalDashboardJobs,
         allJobs: serverRoleMatches || roleFilteredJobs,
-        skillGaps: serverSkillGaps || SKILL_GAP_RECOMMENDATIONS,
+        skillGaps: serverSkillGaps || [],
         nextInterview,
         serverDashboardStats,
         serverAtsAnalysis,

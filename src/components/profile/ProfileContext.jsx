@@ -37,13 +37,13 @@ export const ProfileProvider = ({
   const [currentAvatar, setCurrentAvatar] = useState(profile.avatar || '');
   const [headline, setHeadline] = useState(profile.headline || '');
   const [bio, setBio] = useState(profile.bio || '');
-  const [phone, setPhone] = useState(profile.phone || '+92 300 1234567');
-  const [location, setLocation] = useState(profile.location || 'Islamabad, Pakistan');
+  const [phone, setPhone] = useState(profile.phone || '');
+  const [location, setLocation] = useState(profile.location || '');
   const [github, setGithub] = useState(profile.links?.github || '');
   const [linkedin, setLinkedin] = useState(profile.links?.linkedin || '');
   const [portfolio, setPortfolio] = useState(profile.links?.portfolio || '');
-  const [uploadedResume, setUploadedResume] = useState(profile.resumeFileName || 'Resume_2026.pdf');
-  const [resumeSize, setResumeSize] = useState(profile.resumeFileSize || '1.4 MB');
+  const [uploadedResume, setUploadedResume] = useState(profile.resumeFileName || '');
+  const [resumeSize, setResumeSize] = useState(profile.resumeFileSize || '');
   const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'education' | 'skills' | 'experience' | 'resume'
 
@@ -70,13 +70,13 @@ export const ProfileProvider = ({
     setCurrentAvatar(profile.avatar || '');
     setHeadline(profile.headline || '');
     setBio(profile.bio || '');
-    setPhone(profile.phone || '+92 300 1234567');
-    setLocation(profile.location || 'Islamabad, Pakistan');
+    setPhone(profile.phone || '');
+    setLocation(profile.location || '');
     setGithub(profile.links?.github || '');
     setLinkedin(profile.links?.linkedin || '');
     setPortfolio(profile.links?.portfolio || '');
-    setUploadedResume(profile.resumeFileName || 'Resume_2026.pdf');
-    setResumeSize(profile.resumeFileSize || '1.4 MB');
+    setUploadedResume(profile.resumeFileName || '');
+    setResumeSize(profile.resumeFileSize || '');
   }, [profile]);
 
   const handleSaveEducation = (e) => {

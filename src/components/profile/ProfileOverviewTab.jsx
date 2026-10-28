@@ -1,5 +1,5 @@
 import React from 'react';
-import { Save, Plus, GraduationCap, Trash2, CheckCircle2, Globe, Link2 } from 'lucide-react';
+import { Save, Plus, GraduationCap, Trash2, CheckCircle2, Circle, Globe, Link2 } from 'lucide-react';
 import { useProfile } from './ProfileContext';
 
 export const ProfileOverviewTab = ({ className = '' }) => {
@@ -26,6 +26,7 @@ export const ProfileOverviewTab = ({ className = '' }) => {
     profile,
     stats,
     candidateSkills,
+    uploadedResume,
   } = useProfile();
 
   return (
@@ -193,7 +194,7 @@ export const ProfileOverviewTab = ({ className = '' }) => {
                       </div>
                     </div>
                   </div>
-                  {educationList.length > 1 && handleDeleteEducation && (
+                  {handleDeleteEducation && (
                     <button
                       type="button"
                       onClick={() => handleDeleteEducation(edu.id)}
@@ -223,33 +224,49 @@ export const ProfileOverviewTab = ({ className = '' }) => {
               Profile Completeness
             </h3>
             <span className="text-xs font-extrabold text-blue-600">
-              {stats?.profileCompletion || profile.stats?.profileCompletion || 92}%
+              {stats?.profileCompletion || 0}%
             </span>
           </div>
 
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
             <div
-              style={{ width: `${stats?.profileCompletion || profile.stats?.profileCompletion || 92}%` }}
-              className="bg-blue-600 h-full rounded-full"
+              style={{ width: `${Math.min(Math.max(stats?.profileCompletion || 0, 5), 100)}%` }}
+              className="bg-blue-600 h-full rounded-full transition-all duration-500"
             />
           </div>
 
           <div className="space-y-2 pt-2 text-xs">
-            <div className="flex items-center gap-2 text-emerald-700 font-medium">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Personal information verified</span>
+            <div className={`flex items-center gap-2 font-medium ${profile.name && profile.email ? 'text-emerald-700' : 'text-slate-400'}`}>
+              {profile.name && profile.email ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              ) : (
+                <Circle className="w-4 h-4 text-slate-300 shrink-0" />
+              )}
+              <span>Personal information {profile.name && profile.email ? 'verified' : 'pending'}</span>
             </div>
-            <div className="flex items-center gap-2 text-emerald-700 font-medium">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Technical skills added ({candidateSkills.length} skills)</span>
+            <div className={`flex items-center gap-2 font-medium ${candidateSkills && candidateSkills.length > 0 ? 'text-emerald-700' : 'text-slate-400'}`}>
+              {candidateSkills && candidateSkills.length > 0 ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              ) : (
+                <Circle className="w-4 h-4 text-slate-300 shrink-0" />
+              )}
+              <span>Technical skills added ({candidateSkills?.length || 0} skills)</span>
             </div>
-            <div className="flex items-center gap-2 text-emerald-700 font-medium">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Academic credentials recorded</span>
+            <div className={`flex items-center gap-2 font-medium ${educationList && educationList.length > 0 ? 'text-emerald-700' : 'text-slate-400'}`}>
+              {educationList && educationList.length > 0 ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              ) : (
+                <Circle className="w-4 h-4 text-slate-300 shrink-0" />
+              )}
+              <span>Academic credentials {educationList && educationList.length > 0 ? 'recorded' : 'pending'}</span>
             </div>
-            <div className="flex items-center gap-2 text-emerald-700 font-medium">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Resume PDF uploaded & parsed</span>
+            <div className={`flex items-center gap-2 font-medium ${uploadedResume ? 'text-emerald-700' : 'text-slate-400'}`}>
+              {uploadedResume ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              ) : (
+                <Circle className="w-4 h-4 text-slate-300 shrink-0" />
+              )}
+              <span>Resume document {uploadedResume ? 'uploaded & parsed' : 'pending upload'}</span>
             </div>
           </div>
         </div>

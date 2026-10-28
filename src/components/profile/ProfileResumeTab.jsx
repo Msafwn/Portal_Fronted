@@ -31,7 +31,7 @@ export const ProfileResumeTab = ({ className = '' }) => {
   } = useProfile();
 
   const [isReAnalyzing, setIsReAnalyzing] = useState(false);
-  const [atsScore, setAtsScore] = useState(serverAtsAnalysis?.overallScore || stats?.matchIndex || 85);
+  const [atsScore, setAtsScore] = useState(serverAtsAnalysis?.overallScore || stats?.matchIndex || 0);
   const [dynamicSections, setDynamicSections] = useState(serverAtsAnalysis?.sections || null);
   const [dynamicRecommendation, setDynamicRecommendation] = useState(serverAtsAnalysis?.recommendation || '');
 
@@ -129,27 +129,49 @@ export const ProfileResumeTab = ({ className = '' }) => {
         </div>
 
         {/* Current Resume Info Bar */}
-        <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-50/90 via-indigo-50/50 to-slate-50/50 border border-blue-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-              <FileText className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-slate-900">{uploadedResume}</h4>
-              <p className="text-xs text-slate-500">
-                Size: {resumeSize} • Uploaded on {profile.resumeUploadedDate || 'Recent'}
-              </p>
-              <div className="flex items-center gap-1.5 text-[10px] text-emerald-700 font-bold mt-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>AI-Verified & Synced with Profile</span>
+        {uploadedResume ? (
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-50/90 via-indigo-50/50 to-slate-50/50 border border-blue-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                <FileText className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">{uploadedResume}</h4>
+                <p className="text-xs text-slate-500">
+                  {resumeSize ? `Size: ${resumeSize} • ` : ''}Uploaded on {profile.resumeUploadedDate || 'Recent'}
+                </p>
+                <div className="flex items-center gap-1.5 text-[10px] text-emerald-700 font-bold mt-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>AI-Verified & Synced with Profile</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <label className="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5">
-              <Upload className="w-3.5 h-3.5" />
-              <span>{isUploading ? 'Uploading...' : 'Replace Resume'}</span>
+            <div className="flex items-center gap-2">
+              <label className="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5">
+                <Upload className="w-3.5 h-3.5" />
+                <span>{isUploading ? 'Uploading...' : 'Replace Resume'}</span>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleResumeUpload}
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+        ) : (
+          <div className="p-8 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 space-y-3">
+            <FileText className="w-10 h-10 text-slate-400 mx-auto" />
+            <div>
+              <h4 className="text-sm font-bold text-slate-800">No Resume Uploaded Yet</h4>
+              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                Upload your PDF or Word resume to automatically extract skills and analyze ATS compatibility.
+              </p>
+            </div>
+            <label className="px-5 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition-colors cursor-pointer shadow-xs inline-flex items-center gap-2">
+              <Upload className="w-4 h-4" />
+              <span>{isUploading ? 'Uploading...' : 'Upload Resume (PDF / DOCX)'}</span>
               <input
                 type="file"
                 accept=".pdf,.doc,.docx"
@@ -158,7 +180,7 @@ export const ProfileResumeTab = ({ className = '' }) => {
               />
             </label>
           </div>
-        </div>
+        )}
 
         {/* Detected Skills Preview Chips */}
         <div className="space-y-3 pt-1">

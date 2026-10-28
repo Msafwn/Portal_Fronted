@@ -29,22 +29,22 @@ export const AdminPortalProvider = ({ children, initialUser }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const getAdminProfileFromUser = (u) => {
-    const name = u?.name || INITIAL_ADMIN_PROFILE.name;
+    const name = u?.name || 'Administrator';
     const words = name.trim().split(/\s+/);
     const initials = words.length > 1
-      ? (words[0][0] + words[1][0]).toUpperCase()
+      ? (words[0][0] + (words[1] ? words[1][0] : '')).toUpperCase()
       : name.slice(0, 2).toUpperCase();
 
     return {
       ...INITIAL_ADMIN_PROFILE,
       name,
-      email: u?.email || INITIAL_ADMIN_PROFILE.email,
+      email: u?.email || '',
       role: u?.role === 'super_admin' ? 'Super Administrator & Lead Auditor' : 'Platform Administrator',
       roleLabel: u?.role === 'super_admin' ? 'Super Admin' : 'Admin',
       avatar: u?.avatar || '',
       initials,
       accessLevel: u?.role === 'super_admin' ? 'Tier-1 Root Access' : 'Administrative Access',
-      department: u?.department || INITIAL_ADMIN_PROFILE.department,
+      department: u?.department || 'Administration',
     };
   };
 
