@@ -828,12 +828,12 @@ export const CandidatePortalLayout = () => {
     candidateProfileData?.data?.profile ||
     reduxUser ||
     meData?.data || {
-      name: 'Syed Hamza Ali',
-      headline: 'Full Stack Developer & AI Role Explorer',
+      name: '',
+      headline: '',
       role: 'student',
-      department: 'Information Technology',
-      email: 'hamza.ali@example.com',
-      skills: ['React', 'Node.js', 'MongoDB', 'Python', 'SQL', 'FastAPI', 'Tailwind CSS'],
+      department: '',
+      email: '',
+      skills: [],
     };
 
   const liveStats = candidateProfileData?.data?.stats;

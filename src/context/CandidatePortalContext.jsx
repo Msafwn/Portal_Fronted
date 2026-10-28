@@ -155,9 +155,9 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
           id: edu._id || `edu-${idx}`,
           degree: edu.degree,
           institute: edu.institute,
-          cgpa: edu.gradeOrCgpa || edu.cgpa || '3.60 / 4.0',
-          graduationYear: edu.endYear ? String(edu.endYear) : '2026',
-          field: initialUser.department || 'Computer Science',
+          cgpa: edu.gradeOrCgpa || edu.cgpa || '',
+          graduationYear: edu.endYear ? String(edu.endYear) : (edu.graduationYear ? String(edu.graduationYear) : ''),
+          field: edu.field || initialUser.department || '',
           status: 'Completed',
         }))
       );
@@ -169,8 +169,8 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
           type: 'experience',
           title: exp.title,
           company: exp.company,
-          duration: exp.current ? 'Present' : exp.startDate ? String(new Date(exp.startDate).getFullYear()) : '2025',
-          description: exp.description || 'Hands-on practical deliverables.',
+          duration: exp.current ? 'Present' : exp.startDate ? String(new Date(exp.startDate).getFullYear()) : (exp.duration || ''),
+          description: exp.description || '',
         }))
       );
     }
@@ -233,7 +233,7 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
                   title: exp.title,
                   company: exp.company,
                   duration: exp.duration || (exp.current ? 'Present' : '2025 – Present'),
-                  description: exp.description || 'Hands-on practical deliverables.',
+                  description: exp.description || '',
                   link: exp.link || '',
                 }))
               );

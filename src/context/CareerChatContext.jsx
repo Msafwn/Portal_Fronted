@@ -153,11 +153,11 @@ export const CareerChatProvider = ({ children }) => {
           generateCareerAiResponse({
             userMessage: trimmed,
             candidateProfile: {
-              name: profile?.name || activePersona?.name || 'Candidate',
-              title: activePersona?.title || 'Software Engineer',
+              name: profile?.name || 'Candidate',
+              title: profile?.headline || profile?.role || 'Job Seeker',
               skills: candidateSkills,
               role: candidateRole,
-              department: activePersona?.department || 'Computer Science',
+              department: profile?.department || '',
             },
             availableJobs: candidateData.allJobs || candidateData.jobs || [],
             conversationHistory: messages,

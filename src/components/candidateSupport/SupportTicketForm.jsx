@@ -41,7 +41,7 @@ export const SupportTicketForm = ({ className = '' }) => {
             <input
               type="text"
               disabled
-              value={profile?.name || currentUser?.name || 'Syed Hamza Ali'}
+              value={profile?.name || currentUser?.name || ''}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-600 font-semibold cursor-not-allowed"
             />
           </div>

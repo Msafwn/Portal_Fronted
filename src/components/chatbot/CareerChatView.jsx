@@ -104,7 +104,7 @@ export const CareerChatView = () => {
                   </span>
                 </div>
                 <p className="text-[10px] sm:text-[11px] 2xl:text-xs text-slate-500 font-medium truncate">
-                  {activePersona?.title || 'Personalized Career Counselor'} • Tailored to your profile skills
+                  Personalized Career Counselor • Tailored to your profile skills
                 </p>
               </div>
             </div>
