@@ -6,7 +6,6 @@ export const ProfileHeroCard = ({ className = '' }) => {
   const {
     profile,
     currentAvatar,
-    stats,
     headline,
     phone,
     location,
@@ -64,26 +63,6 @@ export const ProfileHeroCard = ({ className = '' }) => {
                 className="hidden"
               />
             </label>
-          </div>
-
-          {/* Match Index Metric Card */}
-          <div className="flex items-center gap-3 2xl:gap-5">
-            <div className="p-3.5 2xl:p-6 3xl:p-7 rounded-2xl 2xl:rounded-3xl bg-slate-50 border border-slate-200 text-center shrink-0">
-              <span className="text-2xl 2xl:text-4xl 3xl:text-5xl font-black text-blue-600 block leading-tight">
-                {stats.matchIndex || 0}%
-              </span>
-              <span className="text-[10px] 2xl:text-xs 3xl:text-sm text-slate-500 font-bold uppercase tracking-wider">
-                AI Fit Score
-              </span>
-            </div>
-            <div className="p-3.5 2xl:p-6 3xl:p-7 rounded-2xl 2xl:rounded-3xl bg-emerald-50 border border-emerald-200 text-center shrink-0">
-              <span className="text-2xl 2xl:text-4xl 3xl:text-5xl font-black text-emerald-700 block leading-tight">
-                {stats.profileCompletion || 0}%
-              </span>
-              <span className="text-[10px] 2xl:text-xs 3xl:text-sm text-emerald-800 font-bold uppercase tracking-wider">
-                Profile Strength
-              </span>
-            </div>
           </div>
         </div>
 
