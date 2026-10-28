@@ -3,8 +3,8 @@ import { Zap } from 'lucide-react';
 import { useRoleMatches } from './RoleMatchesContext';
 
 export const RoleMatchesHero = ({ className = '' }) => {
-  const { jobs } = useRoleMatches();
-  const topScore = jobs[0]?.matchPercentage || 94;
+  const { jobs, stats } = useRoleMatches();
+  const topScore = jobs.length > 0 ? (jobs[0]?.matchPercentage || 0) : (stats?.matchIndex || 0);
 
   return (
     <div className={`bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white rounded-xl sm:rounded-2xl p-3.5 sm:p-4 lg:p-5 relative overflow-hidden shadow-sm ${className}`}>

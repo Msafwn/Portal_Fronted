@@ -15,6 +15,7 @@ export const RoleMatchesProvider = ({
   appliedJobIds = [],
   handleApply,
   skillGaps = [],
+  stats = {},
   children,
 }) => {
   // Memoize recommendation sorting: only re-sorts when input jobs list changes
@@ -29,7 +30,8 @@ export const RoleMatchesProvider = ({
     appliedJobIds,
     handleApply,
     skillGaps,
-  }), [sortedMatches, appliedJobIds, handleApply, skillGaps]);
+    stats,
+  }), [sortedMatches, appliedJobIds, handleApply, skillGaps, stats]);
 
   return (
     <RoleMatchesContext.Provider value={contextValue}>
@@ -38,4 +40,4 @@ export const RoleMatchesProvider = ({
   );
 };
 
-export default RoleMatchesContext;
+export default RoleMatchesProvider;

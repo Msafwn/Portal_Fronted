@@ -11,6 +11,7 @@ export const RoleMatchesView = ({
   appliedJobIds = [],
   handleApply,
   skillGaps = [],
+  stats = {},
   children,
   className = '',
 }) => {
@@ -20,6 +21,7 @@ export const RoleMatchesView = ({
       appliedJobIds={appliedJobIds}
       handleApply={handleApply}
       skillGaps={skillGaps}
+      stats={stats}
     >
       <div className={`px-4 sm:px-6 lg:px-8 2xl:px-12 3xl:px-16 py-6 2xl:py-10 space-y-6 2xl:space-y-10 max-w-[2400px] mx-auto ${className}`}>
         {children}

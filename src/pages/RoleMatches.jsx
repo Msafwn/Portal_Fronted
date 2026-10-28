@@ -3,7 +3,7 @@ import { useCandidatePortal } from '../context/CandidatePortalContext';
 import { RoleMatchesView } from '../components/matches/RoleMatchesView';
 
 export const RoleMatches = () => {
-  const { jobs, appliedJobIds, handleApply, skillGaps } = useCandidatePortal();
+  const { jobs, appliedJobIds, handleApply, skillGaps, stats } = useCandidatePortal();
 
   return (
     <RoleMatchesView
@@ -11,6 +11,7 @@ export const RoleMatches = () => {
       appliedJobIds={appliedJobIds}
       handleApply={handleApply}
       skillGaps={skillGaps}
+      stats={stats}
     >
       <RoleMatchesView.Hero />
       <RoleMatchesView.RankedList />
