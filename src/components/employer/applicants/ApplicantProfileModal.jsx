@@ -61,11 +61,26 @@ export const ApplicantProfileModal = ({
           {/* Top Profile Card */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50/80 border border-slate-200/80">
             <div className="flex items-center gap-3.5">
-              <img
-                src={applicant.avatar}
-                alt={applicant.name}
-                className="w-14 h-14 rounded-2xl object-cover border-2 border-white shadow-2xs shrink-0"
-              />
+              {applicant.avatar ? (
+                <img
+                  src={applicant.avatar}
+                  alt={applicant.name}
+                  className="w-14 h-14 rounded-2xl object-cover border-2 border-white shadow-2xs shrink-0"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-bold flex items-center justify-center text-base shadow-2xs shrink-0">
+                  {(applicant.name || 'CD')
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map((w) => w[0])
+                    .join('')
+                    .toUpperCase()}
+                </div>
+              )}
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-lg font-bold text-slate-900">{applicant.name}</h3>

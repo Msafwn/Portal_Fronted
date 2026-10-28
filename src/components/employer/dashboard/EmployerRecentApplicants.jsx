@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Clock,
   Check,
+  Users,
 } from 'lucide-react';
 import { useEmployerPortal } from '../../../context/EmployerPortalContext';
 
@@ -80,11 +81,26 @@ export const EmployerRecentApplicants = () => {
               {/* Left Column: Candidate Info & Applied Job */}
               <div className="flex items-start gap-4 2xl:gap-5 flex-1 min-w-0">
                 <div className="relative flex-shrink-0">
-                  <img
-                    src={candidate.avatar}
-                    alt={candidate.name}
-                    className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover ring-2 ring-slate-200 shadow-xs"
-                  />
+                  {candidate.avatar ? (
+                    <img
+                      src={candidate.avatar}
+                      alt={candidate.name}
+                      className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover ring-2 ring-slate-200 shadow-xs"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-bold flex items-center justify-center text-sm 2xl:text-base 3xl:text-xl shadow-xs shrink-0">
+                      {(candidate.name || 'CD')
+                        .trim()
+                        .split(/\s+/)
+                        .slice(0, 2)
+                        .map((w) => w[0])
+                        .join('')
+                        .toUpperCase()}
+                    </div>
+                  )}
                   {candidate.matchScore >= 90 && (
                     <span
                       title="Exceptional Match"

@@ -136,11 +136,26 @@ export const EmployerApplicantCard = ({
         {/* Candidate Profile Info Row */}
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 2xl:gap-6">
           <div className="flex items-start gap-3.5 2xl:gap-5">
-            <img
-              src={applicant.avatar}
-              alt={applicant.name}
-              className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-200 shrink-0 shadow-2xs"
-            />
+            {applicant.avatar ? (
+              <img
+                src={applicant.avatar}
+                alt={applicant.name}
+                className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-200 shrink-0 shadow-2xs"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-bold flex items-center justify-center text-sm 2xl:text-base 3xl:text-xl shadow-2xs shrink-0">
+                {(applicant.name || 'CD')
+                  .trim()
+                  .split(/\s+/)
+                  .slice(0, 2)
+                  .map((w) => w[0])
+                  .join('')
+                  .toUpperCase()}
+              </div>
+            )}
             <div>
               <div className="flex items-center gap-2 2xl:gap-3 flex-wrap">
                 <h3 className="font-bold text-base 2xl:text-xl 3xl:text-2xl text-slate-900 leading-snug">

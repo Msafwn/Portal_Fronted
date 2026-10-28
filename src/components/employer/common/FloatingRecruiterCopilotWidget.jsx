@@ -86,7 +86,7 @@ export const FloatingRecruiterCopilotWidget = () => {
       const response = await axios.post(
         AI_AGENT_URL,
         {
-          sessionId: 'recruiter-session-mustafa',
+          sessionId: `recruiter-session-${company?.name ? company.name.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'active'}`,
           message: `[RECRUITER MODE] ${query}`,
           role: 'recruiter',
         },
