@@ -219,14 +219,14 @@ const CandidatePortalShell = () => {
       to: '/matches',
       label: 'AI Role Matches',
       icon: Zap,
-      badge: `${stats.matchIndex}%`,
-      badgeColor: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
+      badge: stats.totalRecommended > 0 ? stats.totalRecommended : 'Matches',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30',
     },
     {
       to: '/applications',
       label: 'My Applications',
       icon: Send,
-      badge: stats.activeApplications,
+      badge: stats.activeApplications > 0 ? stats.activeApplications : null,
       badgeColor: 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
     },
     {
