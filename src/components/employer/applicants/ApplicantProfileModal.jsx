@@ -62,7 +62,7 @@ export const ApplicantProfileModal = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50/80 border border-slate-200/80">
             <div className="flex items-center gap-3.5">
               {applicant.avatar ? (
-                <img
+                <img loading="lazy" decoding="async"
                   src={applicant.avatar}
                   alt={applicant.name}
                   className="w-14 h-14 rounded-2xl object-cover border-2 border-white shadow-2xs shrink-0"

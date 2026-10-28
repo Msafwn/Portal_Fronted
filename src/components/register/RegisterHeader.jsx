@@ -12,7 +12,7 @@ export const RegisterHeader = ({
       {/* Brand Bar when left banner is hidden (< lg: tablets & phones) */}
       <div className="flex items-center justify-between mb-1.5 lg:hidden">
         <Link to="/" className="flex items-center gap-1.5 group">
-          <img
+          <img loading="lazy" decoding="async"
             src="/logo.png"
             alt="Smart Career AI Logo"
             className="w-5 h-5 rounded-md object-contain shadow-xs"

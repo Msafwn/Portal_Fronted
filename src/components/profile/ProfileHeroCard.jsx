@@ -33,7 +33,7 @@ export const ProfileHeroCard = ({ className = '' }) => {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 2xl:gap-8 -mt-16 sm:-mt-20 2xl:-mt-28 3xl:-mt-32 mb-4 2xl:mb-6">
           {/* Avatar with Camera Overlay & Verification Badge */}
           <div className="relative group shrink-0">
-            <img
+            <img loading="lazy" decoding="async"
               src={
                 currentAvatar ||
                 profile.avatar ||

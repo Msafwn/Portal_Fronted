@@ -65,7 +65,7 @@ export const AdminCandidateDossierModal = ({
         <div className="p-5 sm:p-6 2xl:p-8 3xl:p-9 border-b border-slate-100 flex items-start justify-between gap-4 bg-slate-50/60">
           <div className="flex items-center gap-3.5 2xl:gap-5">
             {candidate.avatar ? (
-              <img
+              <img loading="lazy" decoding="async"
                 src={candidate.avatar}
                 alt={candidate.name}
                 className="w-14 h-14 2xl:w-20 2xl:h-20 3xl:w-24 3xl:h-24 rounded-2xl object-cover border-2 border-white shadow-xs"

@@ -169,7 +169,7 @@ export const AdminEmployersTable = ({
                   <td className="py-2.5 2xl:py-3.5 3xl:py-4 px-2.5 2xl:px-4">
                     <div className="flex items-center gap-2.5 2xl:gap-3.5">
                       {emp.logo ? (
-                        <img
+                        <img loading="lazy" decoding="async"
                           src={emp.logo}
                           alt={emp.name}
                           className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-12 3xl:h-12 rounded-lg 2xl:rounded-xl object-cover border border-slate-200/80 shadow-2xs shrink-0"

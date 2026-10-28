@@ -2,11 +2,6 @@ import React from 'react';
 import { ProfileProvider, useProfile } from './ProfileContext';
 import { ProfileHeroCard } from './ProfileHeroCard';
 import { ProfileNavigationTabs } from './ProfileNavigationTabs';
-import { ProfileOverviewTab } from './ProfileOverviewTab';
-import { ProfileEducationTab } from './ProfileEducationTab';
-import { ProfileSkillsTab } from './ProfileSkillsTab';
-import { ProfileExperienceTab } from './ProfileExperienceTab';
-import { ProfileResumeTab } from './ProfileResumeTab';
 import { ProfileTabContent } from './ProfileTabContent';
 import { ProfileEducationModal } from './ProfileEducationModal';
 import { ProfileExperienceModal } from './ProfileExperienceModal';
@@ -52,11 +47,6 @@ export const ProfileView = ({
 // Compound subcomponent attachments
 ProfileView.HeroCard = ProfileHeroCard;
 ProfileView.NavigationTabs = ProfileNavigationTabs;
-ProfileView.OverviewTab = ProfileOverviewTab;
-ProfileView.EducationTab = ProfileEducationTab;
-ProfileView.SkillsTab = ProfileSkillsTab;
-ProfileView.ExperienceTab = ProfileExperienceTab;
-ProfileView.ResumeTab = ProfileResumeTab;
 ProfileView.TabContent = ProfileTabContent;
 ProfileView.EducationModal = ProfileEducationModal;
 ProfileView.ExperienceModal = ProfileExperienceModal;
@@ -66,11 +56,6 @@ export {
   useProfile,
   ProfileHeroCard,
   ProfileNavigationTabs,
-  ProfileOverviewTab,
-  ProfileEducationTab,
-  ProfileSkillsTab,
-  ProfileExperienceTab,
-  ProfileResumeTab,
   ProfileTabContent,
   ProfileEducationModal,
   ProfileExperienceModal,

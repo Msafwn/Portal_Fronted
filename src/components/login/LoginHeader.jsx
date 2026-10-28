@@ -12,7 +12,7 @@ export const LoginHeader = ({
       {/* Mobile Brand Bar (< md) */}
       <div className="flex items-center justify-between mb-4 md:hidden">
         <Link to="/" className="flex items-center gap-2 group">
-          <img
+          <img loading="lazy" decoding="async"
             src="/logo.png"
             alt="Smart Career AI Logo"
             className="w-7 h-7 rounded-lg object-contain shadow-xs"

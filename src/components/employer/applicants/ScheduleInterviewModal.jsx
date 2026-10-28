@@ -78,7 +78,7 @@ export const ScheduleInterviewModal = ({
         {/* Candidate Context Pill */}
         <div className="px-6 py-3 2xl:px-8 2xl:py-4 bg-blue-50/60 border-b border-blue-100/60 flex items-center justify-between text-xs 2xl:text-sm">
           <div className="flex items-center gap-3">
-            <img
+            <img loading="lazy" decoding="async"
               src={applicant.avatar}
               alt={applicant.name}
               className="w-9 h-9 rounded-full object-cover border border-blue-200"

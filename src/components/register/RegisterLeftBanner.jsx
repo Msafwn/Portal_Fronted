@@ -13,7 +13,7 @@ export const RegisterLeftBanner = ({
 
       <div className="relative z-10 max-w-sm 2xl:max-w-lg 3xl:max-w-xl 4k:max-w-2xl mx-auto w-full space-y-4 lg:space-y-5 2xl:space-y-8">
         <div className="flex items-center gap-2.5 2xl:gap-4">
-          <img
+          <img loading="lazy" decoding="async"
             src="/logo.png"
             alt="Smart Career AI Logo"
             className="w-8 h-8 lg:w-9 lg:h-9 2xl:w-12 2xl:h-12 3xl:w-14 3xl:h-14 rounded-lg 2xl:rounded-xl object-contain bg-white/15 backdrop-blur-md p-1 2xl:p-1.5 border border-white/25 shadow-sm"

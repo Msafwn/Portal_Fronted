@@ -123,7 +123,7 @@ export const EmployerTopBar = () => {
             >
               <div className="relative shrink-0">
                 {recruiter?.avatar ? (
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={recruiter.avatar}
                     alt={recruiter.name}
                     className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-12 3xl:h-12 rounded-full object-cover border-2 border-white shadow-2xs group-hover:scale-105 transition-transform"

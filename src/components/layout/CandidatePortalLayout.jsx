@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { NavLink, Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -33,7 +33,9 @@ import {
   useCandidatePortal,
 } from '../../context/CandidatePortalContext';
 import { CareerChatProvider } from '../../context/CareerChatContext';
-import { FloatingCareerChatWidget } from '../chatbot';
+const FloatingCareerChatWidget = lazy(() =>
+  import('../chatbot').then((m) => ({ default: m.FloatingCareerChatWidget }))
+);
 import { axiosPrivate } from '../../services/apiClient';
 import toast from 'react-hot-toast';
 import { connectSocket } from '../../services/socketService';
@@ -253,7 +255,7 @@ const CandidatePortalShell = () => {
             onClick={() => isDrawer && setSidebarOpen(false)}
           >
             <div className="w-8 h-8 shrink-0 flex items-center justify-center">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/logo.png"
                 alt="Smart Career AI Logo"
                 className="w-8 h-8 rounded-lg object-contain group-hover:scale-105 transition-transform"
@@ -721,7 +723,7 @@ const CandidatePortalShell = () => {
                 >
                   <div className="relative">
                     {profile.avatar && profile.avatar.trim() !== '' && !profile.avatar.includes('unsplash') ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         src={profile.avatar}
                         alt={profile.name}
                         className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-white shadow-2xs group-hover:scale-105 transition-transform"
@@ -907,7 +909,9 @@ export const CandidatePortalLayout = () => {
     <CandidatePortalProvider initialUser={user} initialStats={liveStats} onLogout={handleLogout}>
       <CareerChatProvider>
         <CandidatePortalShell />
-        <FloatingCareerChatWidget />
+        <Suspense fallback={null}>
+          <FloatingCareerChatWidget />
+        </Suspense>
       </CareerChatProvider>
     </CandidatePortalProvider>
   );

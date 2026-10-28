@@ -79,7 +79,7 @@ export const AdminSidebar = ({ isDrawer = false }) => {
         }`}>
           <Link to="/admin/dashboard" title="Smart Career AI Super Admin" className="flex items-center group overflow-hidden">
             <div className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-13 3xl:h-13 shrink-0 flex items-center justify-center">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/logo.png"
                 alt="Smart Career AI Logo"
                 className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-13 3xl:h-13 rounded-lg 2xl:rounded-xl object-contain bg-white/10 p-1 border border-white/20 shadow-sm group-hover:scale-105 transition-transform"
@@ -221,7 +221,7 @@ export const AdminSidebar = ({ isDrawer = false }) => {
           isDrawer ? 'justify-start' : 'justify-center lg:justify-start'
         }`}>
           {adminProfile.avatar ? (
-            <img
+            <img loading="lazy" decoding="async"
               src={adminProfile.avatar}
               alt={adminProfile.name}
               className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-13 3xl:h-13 rounded-lg 2xl:rounded-xl object-cover shadow-xs shrink-0"

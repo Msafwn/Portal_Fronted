@@ -36,3 +36,4 @@ export const PageLoader = ({ message = 'Loading Smart Career System...' }) => {
 };
 
 export default PageLoader;
+

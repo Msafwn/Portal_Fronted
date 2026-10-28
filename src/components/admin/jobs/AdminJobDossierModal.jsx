@@ -80,7 +80,7 @@ export const AdminJobDossierModal = ({
         <div className="p-6 2xl:p-8 3xl:p-9 bg-slate-50 border-b border-slate-200/80 flex items-start justify-between gap-4">
           <div className="flex items-start gap-3.5 2xl:gap-5">
             {job.companyLogo ? (
-              <img
+              <img loading="lazy" decoding="async"
                 src={job.companyLogo}
                 alt={job.company}
                 className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-200 shrink-0 mt-0.5"

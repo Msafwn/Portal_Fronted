@@ -19,7 +19,7 @@ export const ContactFooter = ({ className = '' }) => {
       <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-10 flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Brand identity */}
         <div className="flex items-center gap-2.5">
-          <img src="/logo.png" alt="Smart Career Logo" className="w-6 h-6 rounded-md object-contain shrink-0 shadow-2xs" />
+          <img loading="lazy" decoding="async" src="/logo.png" alt="Smart Career Logo" className="w-6 h-6 rounded-md object-contain shrink-0 shadow-2xs" />
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-slate-900 text-xs 2xl:text-sm tracking-tight">
               Smart Career <span className="text-blue-600">AI</span>

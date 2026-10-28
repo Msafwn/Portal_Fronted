@@ -78,7 +78,7 @@ export const EmployerSidebar = ({ isDrawer = false }) => {
         }`}>
           <Link to="/employer/dashboard" title="Smart Career AI Employer Suite" className="flex items-center group overflow-hidden">
             <div className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-12 3xl:h-12 shrink-0 flex items-center justify-center">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/logo.png"
                 alt="Smart Career AI Logo"
                 className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-12 3xl:h-12 rounded-lg 2xl:rounded-xl object-contain bg-white/10 p-1 border border-white/20 shadow-sm group-hover:scale-105 transition-transform"
@@ -223,7 +223,7 @@ export const EmployerSidebar = ({ isDrawer = false }) => {
         }`}>
           <div className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-12 3xl:h-12 rounded-full shrink-0 flex items-center justify-center">
             {recruiter?.avatar ? (
-              <img
+              <img loading="lazy" decoding="async"
                 src={recruiter.avatar}
                 alt={recruiter.name}
                 className="w-8 h-8 2xl:w-11 2xl:h-11 3xl:w-12 3xl:h-12 rounded-full object-cover ring-2 ring-cyan-400/50"

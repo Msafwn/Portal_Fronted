@@ -32,7 +32,7 @@ export const LandingNavbar = ({ className = '' }) => {
       <div className="w-full px-4 sm:px-6 md:px-6 lg:px-10 xl:px-16 2xl:px-20 h-16 md:h-18 2xl:h-20 3xl:h-24 flex items-center justify-between">
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2 md:gap-2.5 2xl:gap-3.5 group shrink-0">
-          <img
+          <img loading="lazy" decoding="async"
             src="/logo.png"
             alt="Smart Career AI Logo"
             className="w-8 h-8 md:w-9 md:h-9 2xl:w-10 2xl:h-10 3xl:w-12 3xl:h-12 rounded-lg 2xl:rounded-xl object-contain shadow-xs transition-transform group-hover:scale-105"

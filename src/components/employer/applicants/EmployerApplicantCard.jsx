@@ -137,7 +137,7 @@ export const EmployerApplicantCard = ({
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 2xl:gap-6">
           <div className="flex items-start gap-3.5 2xl:gap-5">
             {applicant.avatar ? (
-              <img
+              <img loading="lazy" decoding="async"
                 src={applicant.avatar}
                 alt={applicant.name}
                 className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-200 shrink-0 shadow-2xs"

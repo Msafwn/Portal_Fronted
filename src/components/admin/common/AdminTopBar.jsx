@@ -137,7 +137,7 @@ export const AdminTopBar = () => {
             >
               <div className="relative shrink-0">
                 {adminProfile.avatar ? (
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={adminProfile.avatar}
                     alt={adminProfile.name}
                     className="w-7 h-7 2xl:w-9 2xl:h-9 rounded-lg 2xl:rounded-xl object-cover shadow-xs border border-white"

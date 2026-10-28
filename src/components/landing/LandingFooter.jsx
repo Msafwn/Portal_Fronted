@@ -11,7 +11,7 @@ export const LandingFooter = ({ className = '' }) => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 pb-5 md:pb-6 2xl:pb-8 border-b border-slate-200/80">
           {/* Brand Identity */}
           <div className="flex items-center gap-2.5 md:gap-3 2xl:gap-4">
-            <img
+            <img loading="lazy" decoding="async"
               src="/logo.png"
               alt="Smart Career Logo"
               className="w-8 h-8 md:w-9 md:h-9 2xl:w-10 2xl:h-10 3xl:w-12 3xl:h-12 rounded-lg 2xl:rounded-xl object-contain shadow-2xs border border-slate-200/60"

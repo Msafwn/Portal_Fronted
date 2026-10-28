@@ -82,7 +82,7 @@ export const EmployerRecentApplicants = () => {
               <div className="flex items-start gap-4 2xl:gap-5 flex-1 min-w-0">
                 <div className="relative flex-shrink-0">
                   {candidate.avatar ? (
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={candidate.avatar}
                       alt={candidate.name}
                       className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover ring-2 ring-slate-200 shadow-xs"

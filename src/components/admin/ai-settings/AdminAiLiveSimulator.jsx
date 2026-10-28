@@ -214,7 +214,7 @@ export const AdminAiLiveSimulator = () => {
           <div>
             <div className="flex items-center gap-3 2xl:gap-4">
               {selectedCandidate?.avatar ? (
-                <img
+                <img loading="lazy" decoding="async"
                   src={selectedCandidate.avatar}
                   alt={selectedCandidate.name}
                   className="w-12 h-12 2xl:w-16 2xl:h-16 3xl:w-20 3xl:h-20 rounded-xl 2xl:rounded-2xl object-cover border border-slate-300 shadow-2xs shrink-0"
@@ -498,7 +498,7 @@ export const AdminAiLiveSimulator = () => {
                       {/* Candidate */}
                       <td className="py-2 2xl:py-3 3xl:py-4 px-3 2xl:px-4">
                         <div className="flex items-center gap-2 2xl:gap-3">
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={cand.avatar}
                             alt={cand.name}
                             className="w-7 h-7 2xl:w-10 2xl:h-10 rounded-lg 2xl:rounded-xl object-cover border border-slate-200/80 shadow-2xs shrink-0"

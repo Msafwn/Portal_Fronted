@@ -31,7 +31,7 @@ export const NotFoundView = ({ children, className = '' }) => {
       {/* Top Minimal Header */}
       <header className="px-4 sm:px-6 lg:px-8 py-3 shrink-0 w-full flex items-center justify-between relative z-10">
         <Link to={homeOrDashboard} className="flex items-center gap-2 group">
-          <img
+          <img loading="lazy" decoding="async"
             src="/logo.png"
             alt="Smart Career AI Logo"
             className="w-7 h-7 rounded-lg object-contain shadow-xs transition-transform group-hover:scale-105"

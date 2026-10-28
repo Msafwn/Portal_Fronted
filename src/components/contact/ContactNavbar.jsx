@@ -18,7 +18,7 @@ export const ContactNavbar = ({ className = '' }) => {
     <header className={`sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs ${className}`}>
       <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-10 h-16 2xl:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 2xl:gap-3 group shrink-0">
-          <img
+          <img loading="lazy" decoding="async"
             src="/logo.png"
             alt="Smart Career AI Logo"
             className="w-8 h-8 2xl:w-10 2xl:h-10 rounded-lg object-contain shadow-xs transition-transform group-hover:scale-105 shrink-0"
