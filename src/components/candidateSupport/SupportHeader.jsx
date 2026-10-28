@@ -8,16 +8,16 @@ export const SupportHeader = ({ className = '' }) => {
       <div className="relative z-10 max-w-2xl space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-blue-200 border border-white/15 backdrop-blur-xs">
           <Headphones className="w-3.5 h-3.5 text-blue-400" />
-          <span>24/7 Candidate Support Desk</span>
+          <span>Help & Support Desk</span>
         </div>
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
-          How can our AI & Technical Team{' '}
+          How can we{' '}
           <span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-            assist your career?
+            help you today?
           </span>
         </h1>
         <p className="text-xs sm:text-sm text-blue-100/80 leading-relaxed">
-          Need guidance regarding your 50-30-20 match score, missing skills roadmap, or job applications? Submit a support ticket or explore instant solutions below.
+          Have questions about your applications, profile, or match score? Submit a support ticket or explore quick solutions below.
         </p>
       </div>
     </div>
