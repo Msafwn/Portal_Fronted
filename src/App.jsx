@@ -1,43 +1,58 @@
-import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, Suspense, lazy } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppToaster } from './components/ui/Toast';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Landing from './pages/Landing';
-import Dashboard from './pages/Dashboard';
-import JobFeed from './pages/JobFeed';
-import RoleMatches from './pages/RoleMatches';
-import JobDetails from './pages/JobDetails';
-import Applications from './pages/Applications';
-import Profile from './pages/Profile';
-import Contact from './pages/Contact';
-import CandidateSupport from './pages/CandidateSupport';
-import CareerChat from './pages/CareerChat';
-import InterviewPrep from './pages/InterviewPrep';
-import NotFound from './pages/NotFound';
-import { CandidatePortalLayout } from './components/layout/CandidatePortalLayout';
-import { EmployerPortalLayout } from './components/layout/EmployerPortalLayout';
-import { AdminPortalLayout } from './components/layout/AdminPortalLayout';
-import EmployerDashboard from './pages/EmployerDashboard';
-import EmployerPostJob from './pages/EmployerPostJob';
-import EmployerJobs from './pages/EmployerJobs';
-import EmployerApplicants from './pages/EmployerApplicants';
-import EmployerCompany from './pages/EmployerCompany';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminUsers from './pages/AdminUsers';
-import AdminEmployers from './pages/AdminEmployers';
-import AdminJobs from './pages/AdminJobs';
-import AdminAiSettings from './pages/AdminAiSettings';
-import AdminLogs from './pages/AdminLogs';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import PageLoader from './components/common/PageLoader';
 import {
   selectCurrentUser,
-  selectIsAuthenticated,
   setCredentials,
-  logOut,
 } from './store/slices/authSlice';
-import { useLogoutUserMutation, useGetMeQuery } from './store/api/authApiSlice';
-import { Sparkles, LogOut, CheckCircle, Briefcase, Building2 } from 'lucide-react';
+import { useGetMeQuery } from './store/api/authApiSlice';
+
+// ============================================================================
+// LAZY-LOADED PUBLIC PAGES
+// ============================================================================
+const Landing = lazy(() => import('./pages/Landing'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Contact = lazy(() => import('./pages/Contact'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+// ============================================================================
+// LAZY-LOADED CANDIDATE PORTAL & PAGES
+// ============================================================================
+const CandidatePortalLayout = lazy(() => import('./components/layout/CandidatePortalLayout'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const JobFeed = lazy(() => import('./pages/JobFeed'));
+const RoleMatches = lazy(() => import('./pages/RoleMatches'));
+const JobDetails = lazy(() => import('./pages/JobDetails'));
+const Applications = lazy(() => import('./pages/Applications'));
+const Profile = lazy(() => import('./pages/Profile'));
+const CandidateSupport = lazy(() => import('./pages/CandidateSupport'));
+const CareerChat = lazy(() => import('./pages/CareerChat'));
+const InterviewPrep = lazy(() => import('./pages/InterviewPrep'));
+
+// ============================================================================
+// LAZY-LOADED EMPLOYER PORTAL & PAGES
+// ============================================================================
+const EmployerPortalLayout = lazy(() => import('./components/layout/EmployerPortalLayout'));
+const EmployerDashboard = lazy(() => import('./pages/EmployerDashboard'));
+const EmployerPostJob = lazy(() => import('./pages/EmployerPostJob'));
+const EmployerJobs = lazy(() => import('./pages/EmployerJobs'));
+const EmployerApplicants = lazy(() => import('./pages/EmployerApplicants'));
+const EmployerCompany = lazy(() => import('./pages/EmployerCompany'));
+
+// ============================================================================
+// LAZY-LOADED ADMIN PORTAL & PAGES
+// ============================================================================
+const AdminPortalLayout = lazy(() => import('./components/layout/AdminPortalLayout'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminUsers = lazy(() => import('./pages/AdminUsers'));
+const AdminEmployers = lazy(() => import('./pages/AdminEmployers'));
+const AdminJobs = lazy(() => import('./pages/AdminJobs'));
+const AdminAiSettings = lazy(() => import('./pages/AdminAiSettings'));
+const AdminLogs = lazy(() => import('./pages/AdminLogs'));
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const user = useSelector(selectCurrentUser);
@@ -104,76 +119,77 @@ function App() {
   }, [meData, user, dispatch]);
 
   return (
-    <>
+    <ErrorBoundary>
       <AppToaster />
 
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/public-contact" element={<Contact />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Public Pages */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/public-contact" element={<Contact />} />
 
-        {/* Candidate Portal Routes */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={['student', 'fresh_graduate', 'professional', 'experienced']}>
-              <CandidatePortalLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/candidate" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/career-chat" element={<CareerChat />} />
-          <Route path="/interview-prep" element={<InterviewPrep />} />
-          <Route path="/jobs" element={<JobFeed />} />
-          <Route path="/matches" element={<RoleMatches />} />
-          <Route path="/jobs/:id" element={<JobDetails />} />
-          <Route path="/applications" element={<Applications />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/support" element={<CandidateSupport />} />
-        </Route>
+          {/* Candidate Portal Routes */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['student', 'fresh_graduate', 'professional', 'experienced']}>
+                <CandidatePortalLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/candidate" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/career-chat" element={<CareerChat />} />
+            <Route path="/interview-prep" element={<InterviewPrep />} />
+            <Route path="/jobs" element={<JobFeed />} />
+            <Route path="/matches" element={<RoleMatches />} />
+            <Route path="/jobs/:id" element={<JobDetails />} />
+            <Route path="/applications" element={<Applications />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/support" element={<CandidateSupport />} />
+          </Route>
 
-        {/* Employer Portal Routes */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={['employer']}>
-              <EmployerPortalLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/employer" element={<Navigate to="/employer/dashboard" replace />} />
-          <Route path="/employer/dashboard" element={<EmployerDashboard />} />
-          <Route path="/employer/post-job" element={<EmployerPostJob />} />
-          <Route path="/employer/jobs" element={<EmployerJobs />} />
-          <Route path="/employer/applicants" element={<EmployerApplicants />} />
-          <Route path="/employer/company" element={<EmployerCompany />} />
-          <Route path="/employer/profile" element={<Navigate to="/employer/company" replace />} />
-        </Route>
+          {/* Employer Portal Routes */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['employer']}>
+                <EmployerPortalLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/employer" element={<Navigate to="/employer/dashboard" replace />} />
+            <Route path="/employer/dashboard" element={<EmployerDashboard />} />
+            <Route path="/employer/post-job" element={<EmployerPostJob />} />
+            <Route path="/employer/jobs" element={<EmployerJobs />} />
+            <Route path="/employer/applicants" element={<EmployerApplicants />} />
+            <Route path="/employer/company" element={<EmployerCompany />} />
+            <Route path="/employer/profile" element={<Navigate to="/employer/company" replace />} />
+          </Route>
 
-        {/* Admin Portal Routes */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={['admin', 'super_admin']}>
-              <AdminPortalLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
-          <Route path="/admin/employers" element={<AdminEmployers />} />
-          <Route path="/admin/jobs" element={<AdminJobs />} />
-          <Route path="/admin/ai-settings" element={<AdminAiSettings />} />
-          <Route path="/admin/logs" element={<AdminLogs />} />
-        </Route>
+          {/* Admin Portal Routes */}
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'super_admin']}>
+                <AdminPortalLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/employers" element={<AdminEmployers />} />
+            <Route path="/admin/jobs" element={<AdminJobs />} />
+            <Route path="/admin/ai-settings" element={<AdminAiSettings />} />
+            <Route path="/admin/logs" element={<AdminLogs />} />
+          </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
 export default App;
-
-
