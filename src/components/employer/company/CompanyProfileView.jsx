@@ -23,26 +23,26 @@ export const CompanyProfileView = () => {
 
   // Local Form States
   const [companyForm, setCompanyForm] = useState({
-    name: company.name || 'TechLogix Global Solutions',
-    industry: company.industry || 'Enterprise AI & Cloud Engineering',
-    tagline: company.tagline || 'Building next-generation intelligent platforms for global scale',
-    location: company.location || 'Islamabad, Pakistan (Hybrid / Global)',
-    website: company.website || 'https://techlogix-global.example.com',
-    about: company.about || 'TechLogix Global Solutions is a leading multinational technology consultancy specializing in enterprise AI, cloud architecture, and mission-critical software engineering.',
-    logoInitials: company.logoInitials || 'TL',
-    verified: company.verified ?? true,
-    tier: company.tier || 'Enterprise Partner',
-    totalSeatsQuota: company.totalSeatsQuota || 12,
-    filledSeatsCount: company.filledSeatsCount || 5,
+    name: company.name || '',
+    industry: company.industry || '',
+    tagline: company.tagline || '',
+    location: company.location || '',
+    website: company.website || '',
+    about: company.about || '',
+    logoInitials: company.logoInitials || (company.name ? company.name.slice(0, 2).toUpperCase() : 'CO'),
+    verified: Boolean(company.verified),
+    tier: company.tier || 'Standard',
+    totalSeatsQuota: company.totalSeatsQuota || 0,
+    filledSeatsCount: company.filledSeatsCount || 0,
   });
 
   const [recruiterForm, setRecruiterForm] = useState({
-    name: recruiter.name || 'Ayesha Malik',
-    role: recruiter.role || 'Lead Technical Recruiter & Talent Partner',
-    email: recruiter.email || 'ayesha.m@techlogix.io',
-    phone: recruiter.phone || '+92 (51) 844-9201',
+    name: recruiter.name || '',
+    role: recruiter.role || '',
+    email: recruiter.email || '',
+    phone: recruiter.phone || '',
     avatar: recruiter.avatar || '',
-    department: recruiter.department || 'Talent Acquisition & University Relations',
+    department: recruiter.department || '',
   });
 
   const [isSaving, setIsSaving] = useState(false);

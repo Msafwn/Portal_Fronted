@@ -17,7 +17,7 @@ const getCurrentTime = () =>
   new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 export const FloatingRecruiterCopilotWidget = () => {
-  const { sidebarOpen } = useEmployerPortal() || {};
+  const { company, recruiter, kpiStats, jobs = [], applicants = [], sidebarOpen } = useEmployerPortal() || {};
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState('');
   const [isThinking, setIsThinking] = useState(false);
@@ -26,7 +26,7 @@ export const FloatingRecruiterCopilotWidget = () => {
       id: 'msg-welcome',
       sender: 'ai',
       time: getCurrentTime(),
-      text: 'Hello Mustafa! I am your Autonomous Recruiter AI. I actively track your applicants, screen for top skill matches, and monitor your private seats quota. How can I assist your hiring pipeline today?',
+      text: `Hello ${recruiter?.name || 'Recruiter'}! I am your Autonomous Recruiter AI for ${company?.name || 'your organization'}. I actively track your applicants, screen for top skill matches, and monitor your private seats quota. How can I assist your hiring pipeline today?`,
     },
   ]);
 
@@ -120,15 +120,25 @@ export const FloatingRecruiterCopilotWidget = () => {
       const lower = query.toLowerCase();
 
       if (lower.includes('seat') || lower.includes('quota')) {
-        aiReply = `🔒 **Internal HR Seats Quota Report (Confidential):**\n\n• **Total Allocated Quota:** 12 Seats across all active vacancies\n• **Filled / Onboarded:** 5 Seats (42% Capacity)\n• **Remaining Openings:** 7 Open Seats\n\n**Vacancy Breakdown:**\n1. Junior MERN Developer: **1 / 3 Seats Filled** (2 Openings)\n2. Cloud DevOps Intern: **2 / 4 Seats Filled** (2 Openings)\n3. Senior Cloud Architect: **2 / 5 Seats Filled** (3 Openings)\n\n*(Note: These figures are 100% hidden from candidates to maintain high application volume.)*`;
+        const total = kpiStats?.totalSeats || 0;
+        const filled = kpiStats?.filledSeats || 0;
+        const open = kpiStats?.openVacancies || 0;
+        const util = kpiStats?.utilizationPct || 0;
+        aiReply = `🔒 **Internal HR Seats Quota Report (${company?.name || 'Company'}):**\n\n• **Total Allocated Quota:** ${total} Seats\n• **Filled / Onboarded:** ${filled} Seats (${util}% Capacity)\n• **Remaining Openings:** ${open} Open Vacancies\n\n*(Note: Quota metrics are private and visible only to authorized recruitment administrators.)*`;
       } else if (lower.includes('shortlist') || lower.includes('candidate') || lower.includes('top')) {
-        aiReply = `✨ **Top High-Match Applicants Shortlisted:**\n\n1. **Hamza Tariq (94% AI Match)** — Junior MERN Developer\n   • Strengths: React, Node.js, MongoDB, Git (BS CS 3.8 GPA)\n   • Recommendation: Strongest candidate for technical interview.\n\n2. **Ayesha Noor (91% AI Match)** — Cloud DevOps Intern\n   • Strengths: Linux, Python, Docker basics, CI/CD interest\n   • Recommendation: Ideal candidate for Trainee fellowship.\n\n3. **Bilal Ahmed (88% AI Match)** — Junior MERN Developer\n   • Strengths: 3 completed full-stack university production apps.`;
+        if (applicants.length > 0) {
+          const topApps = [...applicants].sort((a, b) => (b.matchScore || b.matchPercentage || 0) - (a.matchScore || a.matchPercentage || 0)).slice(0, 3);
+          const lines = topApps.map((a, i) => `${i + 1}. **${a.name} (${a.matchScore || a.matchPercentage || 80}% AI Match)** — ${a.jobTitle || 'Applied Role'}\n   • Department: ${a.department || 'General'}\n   • Status: ${a.status || 'Pending Review'}`);
+          aiReply = `✨ **Top High-Match Applicants in Pipeline:**\n\n${lines.join('\n\n')}`;
+        } else {
+          aiReply = `Currently there are no applicants submitted for your vacancies yet. Once candidates apply, the 50-30-20 AI matching engine will rank them here automatically.`;
+        }
       } else if (lower.includes('job description') || lower.includes('draft')) {
-        aiReply = `✍️ **Drafted Job Specification:**\n\n**Title:** Junior Full-Stack Web Developer Intern\n**Target Role:** 🎓 Student / Intern\n**Work Mode:** Hybrid (Islamabad)\n**Core Skills:** React.js, Tailwind CSS, Node.js, MongoDB\n\n**Key Responsibilities:**\n• Collaborate with engineering team to build scalable UI components.\n• Integrate RESTful APIs and handle asynchronous state management.\n• Participate in code reviews and test automation sprints.\n\n*Would you like me to auto-fill this into the Post Job form?*`;
+        aiReply = `✍️ **Drafted Job Specification:**\n\n**Company:** ${company?.name || 'Organization'}\n**Title:** Junior Full-Stack Developer\n**Target Role:** 🎓 Student / Intern / Graduate\n**Core Skills:** React.js, Node.js, MongoDB\n\n**Key Responsibilities:**\n• Build responsive user interfaces and clean components.\n• Integrate REST APIs and database models.\n• Participate in team agile sprints.\n\n*You can post this directly using the Post Job page.*`;
       } else if (lower.includes('interview') || lower.includes('invite')) {
-        aiReply = `✉️ **Shortlisted Candidate Interview Invite Template:**\n\n**Subject:** Interview Invitation: Technical Round with TechLogix Global\n\n*"Dear [Candidate Name],\n\nCongratulations! Based on your impressive 90%+ match score and strong technical credentials, we are pleased to invite you to a 45-minute virtual technical discussion for the [Job Title] role.\n\nPlease choose a slot that works best for you: [Scheduling Link]. We look forward to speaking with you!"*\n\n*— Mustafa Hashmi, Talent Acquisition Team*`;
+        aiReply = `✉️ **Candidate Interview Invite Template:**\n\n**Subject:** Interview Invitation with ${company?.name || 'Our Team'}\n\n*"Dear [Candidate Name],\n\nCongratulations! Based on your strong AI compatibility score and application credentials, we would like to invite you to an interview for the [Job Title] position at ${company?.name || 'our company'}.\n\nPlease let us know your availability: [Scheduling Link]. We look forward to connecting with you!"*\n\n*— ${recruiter?.name || 'Talent Acquisition Team'}, ${company?.name || 'Company'}*`;
       } else if (lower === 'h' || lower === 'hi' || lower === 'hello' || lower === 'salam' || lower === 'hey' || lower.includes('salam')) {
-        aiReply = `Walaikum Assalam! 🌸 Welcome to **Smart Career Recruiter Copilot**.
+        aiReply = `Walaikum Assalam! 🌸 Welcome to **${company?.name || 'Company'} Recruiter Copilot**.
 
 Main aapki hiring team ka autonomous AI copilot hoon. Main aapki kya madad kar sakta hoon?
 
@@ -139,7 +149,9 @@ Main aapki hiring team ka autonomous AI copilot hoon. Main aapki kya madad kar s
 
 Bataiye, kis kaam se shuru karein?`;
       } else {
-        aiReply = `I have analyzed your query against the active hiring directory. Currently, you have **4 active vacancies** with **78 total applicants**. 14 applicants meet our high-compatibility threshold (>85%). You can review their full profiles directly in the **Applicants Screening Desk**.`;
+        const activeJobs = jobs.filter((j) => j.status === 'Active' || j.status === 'Open').length;
+        const highMatches = applicants.filter((a) => (a.matchScore || a.matchPercentage || 0) >= 80).length;
+        aiReply = `Currently, you have **${activeJobs} active vacancies** with **${applicants.length} total candidates**. ${highMatches} candidates meet our high-compatibility threshold (≥80%). You can review all profiles in the **Applicants Desk**.`;
       }
 
       setMessages((prev) => [
@@ -189,7 +201,7 @@ Bataiye, kis kaam se shuru karein?`;
                   </span>
                 </div>
                 <p className="text-[10px] text-slate-400 mt-1 leading-none">
-                  TechLogix Talent Engine • Quota Watchdog
+                  {company?.name || 'Company'} Talent Engine • Quota Watchdog
                 </p>
               </div>
             </div>

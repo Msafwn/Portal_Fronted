@@ -109,7 +109,7 @@ export const EmployerPostJobView = () => {
         department: formData.department,
         targetRole: formData.targetRole,
         skills: formData.skills,
-        companyName: company?.name || 'TechLogix Global',
+        companyName: company?.name || 'Company',
       });
 
       if (res.data?.data) {
@@ -138,7 +138,7 @@ export const EmployerPostJobView = () => {
 
     // Fallback template generator (Dynamic by Department)
     const dept = (formData.department || '').toLowerCase();
-    const compName = company?.name || 'TechLogix Global';
+    const compName = company?.name || 'Company';
 
     let defaultTitle = formData.title.trim();
     let templateOverview = '';
@@ -246,7 +246,7 @@ export const EmployerPostJobView = () => {
           totalSeats: Number(formData.totalSeats) || 1,
           experienceRequired: formData.experienceRequired,
           skillsRequired: formData.skills,
-          description: formData.overview || `${formData.title} opening at ${company?.name || 'TechLogix Global'}`,
+          description: formData.overview || `${formData.title} opening at ${company?.name || 'Company'}`,
           overview: formData.overview,
           requirements: formData.responsibilities,
           qualifications: formData.qualifications,
@@ -432,9 +432,9 @@ export const EmployerPostJobView = () => {
         <div className="hidden lg:block lg:col-span-5">
           <JobPostLivePreview
             jobData={formData}
-            companyName={company?.name || 'TechLogix Global'}
-            companyLogo={company?.logoInitials || 'TL'}
-            companyLocation={company?.location || 'Islamabad, PK'}
+            companyName={company?.name || 'Company'}
+            companyLogo={company?.logoInitials || (company?.name ? company.name.slice(0, 2).toUpperCase() : 'CO')}
+            companyLocation={company?.location || ''}
           />
         </div>
       </div>
@@ -456,9 +456,9 @@ export const EmployerPostJobView = () => {
             <div className="p-2">
               <JobPostLivePreview
                 jobData={formData}
-                companyName={company?.name || 'TechLogix Global'}
-                companyLogo={company?.logoInitials || 'TL'}
-                companyLocation={company?.location || 'Islamabad, PK'}
+                companyName={company?.name || 'Company'}
+                companyLogo={company?.logoInitials || (company?.name ? company.name.slice(0, 2).toUpperCase() : 'CO')}
+                companyLocation={company?.location || ''}
               />
             </div>
           </div>

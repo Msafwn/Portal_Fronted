@@ -16,7 +16,7 @@ export const EmployerApplicantsHeader = ({
     toast.success('Preparing Executive Candidate PDF Report... 📄');
     exportPipelineToPdf({
       applicants,
-      company: company || { name: 'TechLogix Global Solutions', industry: 'Enterprise AI & Cloud Engineering' },
+      company: company || { name: 'Employer Talent Portal', industry: 'Recruitment' },
       activeJobTitle: activeJobFilterTitle,
     });
   };

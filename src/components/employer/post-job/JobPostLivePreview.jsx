@@ -17,9 +17,9 @@ import {
 
 export const JobPostLivePreview = ({
   jobData,
-  companyName = 'TechLogix Global Solutions',
-  companyLogo = 'TL',
-  companyLocation = 'Islamabad HQ, Pakistan',
+  companyName = 'Company',
+  companyLogo = 'CO',
+  companyLocation = '',
 }) => {
   const [previewTab, setPreviewTab] = useState('candidate'); // 'candidate' | 'recruiter'
 

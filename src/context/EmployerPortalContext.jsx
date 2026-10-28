@@ -4,10 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { selectCurrentUser, logOut } from '../store/slices/authSlice';
 import { useLogoutUserMutation } from '../store/api/authApiSlice';
 import toast from 'react-hot-toast';
-import {
-  INITIAL_EMPLOYER_COMPANY,
-  INITIAL_EMPLOYER_RECRUITER,
-} from '../constants/employerConstants';
 import { axiosPrivate } from '../services/apiClient';
 
 const EmployerPortalContext = createContext(null);
@@ -150,9 +146,10 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
     const activeJobsCount = jobs.filter((j) => j.status === 'Active' || j.status === 'Open').length;
     const totalApplicantsCount = applicants.length;
     const shortlistedCount = applicants.filter((a) => a.status === 'Shortlisted').length;
-    const totalSeats = Number(company?.totalSeatsQuota) || 12;
+    const seatsFromJobs = jobs.reduce((sum, j) => sum + (Number(j.totalSeats) || 1), 0);
+    const totalSeats = Number(company?.totalSeatsQuota) || (seatsFromJobs > 0 ? seatsFromJobs : 0);
     const filledFromJobs = jobs.reduce((sum, j) => sum + (Number(j.filledSeats) || 0), 0);
-    const filledSeats = filledFromJobs > 0 ? filledFromJobs : (Number(company?.filledSeatsCount) || 5);
+    const filledSeats = filledFromJobs > 0 ? filledFromJobs : (Number(company?.filledSeatsCount) || 0);
     const openVacancies = Math.max(0, totalSeats - filledSeats);
     const utilizationPct = totalSeats > 0 ? Math.min(100, Math.round((filledSeats / totalSeats) * 100)) : 0;
 
@@ -268,7 +265,7 @@ export const EmployerPortalProvider = ({ children, initialUser }) => {
     const emailToSend =
       interviewDetails.candidateEmail ||
       targetCandidate?.email ||
-      'safwanarshad782@gmail.com';
+      '';
 
     setApplicants((prev) =>
       prev.map((app) => {

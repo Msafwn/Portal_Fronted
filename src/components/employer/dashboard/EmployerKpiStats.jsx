@@ -11,7 +11,14 @@ import {
 import { useEmployerPortal } from '../../../context/EmployerPortalContext';
 
 export const EmployerKpiStats = () => {
-  const { kpiStats } = useEmployerPortal();
+  const { kpiStats, jobs = [], applicants = [] } = useEmployerPortal();
+
+  const activeDeptCount = new Set(jobs.map((j) => j.department).filter(Boolean)).size;
+  const highMatchCount = applicants.filter((a) => (a.matchScore || a.matchPercentage || 0) >= 80).length;
+  const inInterviewCount = applicants.filter((a) => a.status === 'Interview Scheduled').length;
+  const avgFit = applicants.length > 0
+    ? `${(applicants.reduce((sum, a) => sum + (a.matchScore || a.matchPercentage || 0), 0) / applicants.length).toFixed(1)}% Fit`
+    : '0% Fit';
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 2xl:gap-6 3xl:gap-8">
@@ -33,14 +40,14 @@ export const EmployerKpiStats = () => {
             </span>
             <span className="text-xs 2xl:text-sm 3xl:text-base text-emerald-700 font-bold flex items-center bg-emerald-50 px-2 py-0.5 2xl:px-3 2xl:py-1 rounded-full border border-emerald-200 whitespace-nowrap">
               <ArrowUpRight className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 mr-0.5" />
-              +1 this week
+              {kpiStats.activeJobsCount} Open
             </span>
           </div>
         </div>
 
         <div className="flex items-center justify-between text-xs 2xl:text-sm 3xl:text-base text-slate-500 border-t border-slate-100 pt-2.5 2xl:pt-4 mt-3 2xl:mt-4 whitespace-nowrap">
           <span>Departments</span>
-          <span className="text-slate-800 font-semibold">3 Active</span>
+          <span className="text-slate-800 font-semibold">{activeDeptCount} Active</span>
         </div>
       </div>
 
@@ -62,7 +69,7 @@ export const EmployerKpiStats = () => {
             </span>
             <span className="text-xs 2xl:text-sm 3xl:text-base text-indigo-700 font-bold flex items-center bg-indigo-50 px-2 py-0.5 2xl:px-3 2xl:py-1 rounded-full border border-indigo-200 whitespace-nowrap">
               <Sparkles className="w-3 h-3 2xl:w-4 2xl:h-4 mr-1" />
-              12 High Match
+              {highMatchCount} High Match
             </span>
           </div>
         </div>
@@ -91,14 +98,14 @@ export const EmployerKpiStats = () => {
             </span>
             <span className="text-xs 2xl:text-sm 3xl:text-base text-emerald-700 font-bold flex items-center bg-emerald-50 px-2 py-0.5 2xl:px-3 2xl:py-1 rounded-full border border-emerald-200 whitespace-nowrap">
               <TrendingUp className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 mr-0.5" />
-              3 in Interview
+              {inInterviewCount} in Interview
             </span>
           </div>
         </div>
 
         <div className="flex items-center justify-between text-xs 2xl:text-sm 3xl:text-base text-slate-500 border-t border-slate-100 pt-2.5 2xl:pt-4 mt-3 2xl:mt-4 whitespace-nowrap">
           <span>Average Match</span>
-          <span className="text-emerald-700 font-semibold">88.5% Fit</span>
+          <span className="text-emerald-700 font-semibold">{avgFit}</span>
         </div>
       </div>
 

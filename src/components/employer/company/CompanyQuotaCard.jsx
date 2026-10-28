@@ -2,15 +2,14 @@ import React from 'react';
 import { Shield } from 'lucide-react';
 
 export const CompanyQuotaCard = ({
-  totalSeatsQuota = 12,
-  filledSeatsCount = 5,
+  totalSeatsQuota = 0,
+  filledSeatsCount = 0,
   onChangeQuota,
 }) => {
   const openSeats = Math.max(0, totalSeatsQuota - filledSeatsCount);
-  const utilizationPct = Math.min(
-    100,
-    Math.round((filledSeatsCount / (totalSeatsQuota || 1)) * 100)
-  );
+  const utilizationPct = totalSeatsQuota > 0
+    ? Math.min(100, Math.round((filledSeatsCount / totalSeatsQuota) * 100))
+    : 0;
 
   return (
     <div className="bg-white border border-slate-200/90 rounded-2xl 2xl:rounded-3xl p-6 2xl:p-8 3xl:p-10 shadow-2xs space-y-5 2xl:space-y-7">

@@ -55,8 +55,17 @@ export const EmployerRecentApplicants = () => {
 
       {/* Candidate Cards List */}
       <div className="divide-y divide-slate-100">
-        {sortedApplicants.map((candidate) => {
-          const isShortlisted = candidate.status === 'Shortlisted';
+        {sortedApplicants.length === 0 ? (
+          <div className="p-8 2xl:p-12 text-center bg-slate-50/50">
+            <Users className="w-8 h-8 2xl:w-10 2xl:h-10 text-slate-300 mx-auto mb-2" />
+            <h4 className="text-sm 2xl:text-base font-bold text-slate-700">No applicants yet</h4>
+            <p className="text-xs 2xl:text-sm text-slate-400 mt-1 max-w-sm mx-auto">
+              Candidates applying to your posted vacancies will appear here automatically ranked by AI match score.
+            </p>
+          </div>
+        ) : (
+          sortedApplicants.map((candidate) => {
+            const isShortlisted = candidate.status === 'Shortlisted';
           const breakdown = candidate.scoreBreakdown || {
             technical: Math.round((candidate.matchScore || 75) * 0.5),
             experience: Math.round((candidate.matchScore || 75) * 0.3),
@@ -213,7 +222,8 @@ export const EmployerRecentApplicants = () => {
               </div>
             </div>
           );
-        })}
+        })
+      )}
       </div>
 
       {/* Footer */}

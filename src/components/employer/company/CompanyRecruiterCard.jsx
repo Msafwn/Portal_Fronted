@@ -19,8 +19,8 @@ export const CompanyRecruiterCard = ({ recruiter = {}, onChangeRecruiter }) => {
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 2xl:gap-6 p-4 2xl:p-6 rounded-xl 2xl:rounded-2xl bg-slate-50/70 border border-slate-200/60 mb-2">
         <img
-          src={recruiter.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150'}
-          alt={recruiter.name}
+          src={recruiter.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(recruiter.name || 'Recruiter')}&background=1e3a8a&color=fff&bold=true`}
+          alt={recruiter.name || 'Recruiter'}
           className="w-14 h-14 2xl:w-20 2xl:h-20 rounded-2xl 2xl:rounded-3xl object-cover border-2 border-white shadow-xs shrink-0"
         />
         <div>

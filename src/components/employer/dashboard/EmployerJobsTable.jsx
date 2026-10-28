@@ -117,7 +117,16 @@ export const EmployerJobsTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs 2xl:text-sm 3xl:text-base">
-            {paginatedJobs.map((job) => {
+            {paginatedJobs.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="py-8 text-center text-slate-400">
+                  <Briefcase className="w-8 h-8 2xl:w-10 2xl:h-10 text-slate-300 mx-auto mb-2" />
+                  <p className="font-semibold text-slate-700">No job openings found</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Click "Post Job" above to create your first vacancy.</p>
+                </td>
+              </tr>
+            ) : (
+              paginatedJobs.map((job) => {
               const seatPercent = Math.min(100, Math.round((job.filledSeats / job.totalSeats) * 100));
 
               return (
@@ -226,7 +235,8 @@ export const EmployerJobsTable = () => {
                   </td>
                 </tr>
               );
-            })}
+            })
+          )}
           </tbody>
         </table>
       </div>

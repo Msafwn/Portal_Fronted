@@ -21,7 +21,7 @@ export const CompanyProfileHeader = ({ company = {} }) => {
         <div className="flex items-start sm:items-center gap-4 2xl:gap-6">
           {/* Company Logo Badge */}
           <div className="w-14 h-14 sm:w-16 sm:h-16 2xl:w-20 2xl:h-20 3xl:w-24 3xl:h-24 rounded-2xl 2xl:rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-black text-xl sm:text-2xl 2xl:text-3xl 3xl:text-4xl flex items-center justify-center shrink-0 shadow-md shadow-blue-500/20 border-2 border-white">
-            {company.logoInitials || 'TL'}
+            {company.logoInitials || (company.name ? company.name.slice(0, 2).toUpperCase() : 'CO')}
           </div>
 
           <div>
@@ -35,30 +35,40 @@ export const CompanyProfileHeader = ({ company = {} }) => {
                   Verified Employer
                 </span>
               )}
-              <span className="px-2.5 py-0.5 2xl:px-3.5 2xl:py-1 rounded-full text-xs 2xl:text-sm 3xl:text-base font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                {company.tier || 'Enterprise Partner'}
-              </span>
+              {company.tier && (
+                <span className="px-2.5 py-0.5 2xl:px-3.5 2xl:py-1 rounded-full text-xs 2xl:text-sm 3xl:text-base font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                  {company.tier}
+                </span>
+              )}
             </div>
 
-            <p className="text-xs sm:text-sm 2xl:text-base 3xl:text-lg text-slate-500 mt-1 2xl:mt-1.5">
-              {company.tagline || 'Building next-generation intelligent platforms for global scale'}
-            </p>
+            {company.tagline && (
+              <p className="text-xs sm:text-sm 2xl:text-base 3xl:text-lg text-slate-500 mt-1 2xl:mt-1.5">
+                {company.tagline}
+              </p>
+            )}
 
             <div className="flex items-center gap-4 2xl:gap-6 text-xs 2xl:text-sm 3xl:text-base text-slate-500 mt-2 2xl:mt-3 flex-wrap">
-              <span className="flex items-center gap-1 text-slate-600">
-                <Building2 className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-slate-400" />
-                {company.industry || 'Multi-Discipline Employer'}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1 text-slate-600">
-                <MapPin className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-slate-400" />
-                {company.location || 'Islamabad, Pakistan'}
-              </span>
+              {company.industry && (
+                <span className="flex items-center gap-1 text-slate-600">
+                  <Building2 className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-slate-400" />
+                  {company.industry}
+                </span>
+              )}
+              {company.location && (
+                <>
+                  {company.industry && <span>•</span>}
+                  <span className="flex items-center gap-1 text-slate-600">
+                    <MapPin className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-slate-400" />
+                    {company.location}
+                  </span>
+                </>
+              )}
               {company.website && (
                 <>
-                  <span>•</span>
+                  {(company.industry || company.location) && <span>•</span>}
                   <a
-                    href={company.website}
+                    href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-1 text-blue-600 hover:underline font-medium"

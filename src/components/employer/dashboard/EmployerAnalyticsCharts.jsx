@@ -4,7 +4,7 @@ import { TrendingUp, PieChart as PieIcon, Sparkles, Building2 } from 'lucide-rea
 import { useEmployerPortal } from '../../../context/EmployerPortalContext';
 
 export const EmployerAnalyticsCharts = () => {
-  const { jobs = [] } = useEmployerPortal();
+  const { jobs = [], applicants = [] } = useEmployerPortal();
 
   // 1. Line/Area Chart Options & Data: Weekly Ingestion & AI Matches
   const areaChartOptions = {
@@ -72,16 +72,31 @@ export const EmployerAnalyticsCharts = () => {
     },
   };
 
-  const areaChartSeries = [
-    {
-      name: 'Total Applications Ingested',
-      data: [12, 19, 15, 28, 24, 38, 31],
-    },
-    {
-      name: 'AI High Matches (≥ 80% Fit ⭐)',
-      data: [5, 9, 8, 16, 14, 22, 18],
-    },
-  ];
+  const areaChartSeries = useMemo(() => {
+    const totalPerDay = [0, 0, 0, 0, 0, 0, 0];
+    const highMatchPerDay = [0, 0, 0, 0, 0, 0, 0];
+
+    applicants.forEach((app) => {
+      const date = app.appliedAt || app.createdAt ? new Date(app.appliedAt || app.createdAt) : null;
+      const dayIdx = date ? date.getDay() : 1;
+      const monIdx = dayIdx === 0 ? 6 : dayIdx - 1;
+      totalPerDay[monIdx] += 1;
+      if ((app.matchScore || app.matchPercentage || 0) >= 80) {
+        highMatchPerDay[monIdx] += 1;
+      }
+    });
+
+    return [
+      {
+        name: 'Total Applications Ingested',
+        data: totalPerDay,
+      },
+      {
+        name: 'AI High Matches (≥ 80% Fit ⭐)',
+        data: highMatchPerDay,
+      },
+    ];
+  }, [applicants]);
 
   // 2. Compute Department Distribution from active jobs
   const departmentStats = useMemo(() => {
@@ -106,9 +121,8 @@ export const EmployerAnalyticsCharts = () => {
       }
     });
 
-    // Provide default fallback counts if empty
     return {
-      series: [itCount || 11, medCount || 3, engCount || 2, bizCount || 4],
+      series: [itCount, medCount, engCount, bizCount],
       labels: [
         'Computer Science & IT',
         'Medical & Healthcare',

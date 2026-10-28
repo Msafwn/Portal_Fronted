@@ -5,7 +5,7 @@
 
 export const exportPipelineToPdf = ({
   applicants = [],
-  company = { name: 'TechLogix Global Solutions', industry: 'Enterprise AI & Cloud Engineering' },
+  company = { name: 'Employer Talent Portal', industry: 'Recruitment' },
   activeJobTitle = null,
 }) => {
   if (!applicants || applicants.length === 0) {

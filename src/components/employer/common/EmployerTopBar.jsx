@@ -67,10 +67,10 @@ export const EmployerTopBar = () => {
           {/* Company Badge Pill (Visible on wide screens) */}
           <div className="hidden xl:flex items-center gap-2 2xl:gap-2.5 px-3 2xl:px-4 py-1.5 2xl:py-2.5 rounded-xl 2xl:rounded-2xl bg-slate-100/90 hover:bg-slate-200/80 text-xs 2xl:text-base font-semibold text-slate-700 border border-slate-200 transition-all shadow-2xs whitespace-nowrap shrink-0">
             <div className="w-5 h-5 2xl:w-6 2xl:h-6 rounded-md bg-blue-600 text-white flex items-center justify-center text-[10px] 2xl:text-xs font-bold shrink-0">
-              {company?.logoInitials || 'TL'}
+              {company?.logoInitials || (company?.name ? company.name.slice(0, 2).toUpperCase() : 'CO')}
             </div>
             <span className="font-bold text-slate-800 whitespace-nowrap truncate max-w-[150px]">
-              {company?.name || 'TechLogix Global'}
+              {company?.name || 'Company Portal'}
             </span>
           </div>
 

@@ -114,11 +114,11 @@ export const EmployerSidebar = ({ isDrawer = false }) => {
           isDrawer ? 'flex' : 'hidden lg:flex'
         }`}>
           <div className="w-8 h-8 2xl:w-11 2xl:h-11 rounded-lg 2xl:rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold text-xs 2xl:text-base shadow-sm shrink-0">
-            {company?.logoInitials || 'TL'}
+            {company?.logoInitials || (company?.name ? company.name.slice(0, 2).toUpperCase() : 'CO')}
           </div>
           <div className="overflow-hidden min-w-0">
             <div className="text-xs 2xl:text-base font-bold text-white truncate flex items-center gap-1">
-              <span>{company?.name || 'TechLogix Global'}</span>
+              <span>{company?.name || 'Employer Portal'}</span>
               <ShieldCheck className="w-3 h-3 2xl:w-4 2xl:h-4 text-cyan-400 shrink-0" />
             </div>
             <div className="text-[10px] 2xl:text-xs text-blue-200/70 truncate">

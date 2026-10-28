@@ -22,11 +22,11 @@ export const EmployerDashboardHero = () => {
         <div className="space-y-2 2xl:space-y-3.5 max-w-2xl 2xl:max-w-4xl">
           <div className="inline-flex items-center gap-1.5 2xl:gap-2 px-2.5 2xl:px-4 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs 3xl:text-sm font-bold bg-white/10 text-cyan-300 border border-white/15">
             <Sparkles className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-cyan-300" />
-            <span>Enterprise Talent Suite • {company?.industry || 'Technology & AI'}</span>
+            <span>Enterprise Talent Suite{company?.industry ? ` • ${company.industry}` : ''}</span>
           </div>
 
           <h1 className="text-xl sm:text-2xl 2xl:text-3xl 3xl:text-4xl 4k:text-5xl font-black text-white">
-            Welcome, {recruiter?.name}! 👋
+            Welcome, {recruiter?.name || 'Recruiter'}! 👋
           </h1>
 
           <p className="text-xs 2xl:text-base 3xl:text-lg text-cyan-200 font-medium">
@@ -34,15 +34,23 @@ export const EmployerDashboardHero = () => {
           </p>
 
           <p className="text-xs 2xl:text-base 3xl:text-lg text-blue-100 flex items-center gap-2 2xl:gap-3 flex-wrap pt-0.5">
-            <span className="font-semibold text-white">{company?.name}</span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3 2xl:w-4 2xl:h-4 text-blue-300" /> {company?.location}
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 2xl:w-4 2xl:h-4 text-cyan-300" /> Verified Enterprise Partner
-            </span>
+            <span className="font-semibold text-white">{company?.name || 'Employer Portal'}</span>
+            {company?.location && (
+              <>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3 2xl:w-4 2xl:h-4 text-blue-300" /> {company.location}
+                </span>
+              </>
+            )}
+            {company?.verified && (
+              <>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3 2xl:w-4 2xl:h-4 text-cyan-300" /> Verified Partner
+                </span>
+              </>
+            )}
           </p>
         </div>
 
