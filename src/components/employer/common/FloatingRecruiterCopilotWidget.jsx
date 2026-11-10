@@ -89,6 +89,10 @@ export const FloatingRecruiterCopilotWidget = () => {
           sessionId: `recruiter-session-${company?.name ? company.name.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'active'}`,
           message: `[RECRUITER MODE] ${query}`,
           role: 'recruiter',
+          company: company?.name || 'Company',
+          kpiStats: kpiStats || null,
+          jobs: jobs || [],
+          applicants: applicants || [],
         },
         {
           timeout: 35000,
