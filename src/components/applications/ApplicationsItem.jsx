@@ -20,9 +20,27 @@ export const ApplicationsItem = ({ app, className = '' }) => {
             <Calendar className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-slate-400" />
             Applied: {app.appliedDate || 'Recently'}
           </span>
-          <span className="px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            {app.matchScore || app.matchPercentage || 85}% Match Index
-          </span>
+          {(() => {
+            const rawScore = typeof app.matchScore === 'number' ? app.matchScore : (typeof app.matchPercentage === 'number' ? app.matchPercentage : null);
+            if (rawScore === null) {
+              return (
+                <span className="px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                  Not Evaluated
+                </span>
+              );
+            }
+            const badgeClass =
+              rawScore >= 75
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : rawScore >= 40
+                ? 'bg-amber-50 text-amber-700 border-amber-200'
+                : 'bg-rose-50 text-rose-700 border-rose-200';
+            return (
+              <span className={`px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs font-bold border ${badgeClass}`}>
+                {rawScore}% Match Index
+              </span>
+            );
+          })()}
         </div>
 
         <h3 className="text-base 2xl:text-xl font-bold text-slate-900 leading-snug">

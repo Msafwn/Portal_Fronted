@@ -19,7 +19,7 @@ export const SupportProvider = ({ profile, children }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
 
-  const [tickets, setTickets] = useState([
+  const initialTickets = [
     {
       id: 'TICK-8402',
       category: 'AI Role Matching',
@@ -38,7 +38,17 @@ export const SupportProvider = ({ profile, children }) => {
       date: 'Sep 28, 2026',
       response: 'Your resume was successfully parsed with 7 technical competencies extracted.',
     },
-  ]);
+  ];
+
+  const [tickets, setTickets] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smart_career_support_tickets');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      // ignore
+    }
+    return initialTickets;
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,14 +73,20 @@ export const SupportProvider = ({ profile, children }) => {
         status: 'Open',
         statusColor: 'bg-blue-50 text-blue-700 border-blue-200',
         date: 'Just now',
-        response: 'Ticket received. A technical advisor will reply within 2 hours.',
+        response: 'Ticket logged in FYP candidate support queue. Review assigned to administrator.',
       };
 
-      setTickets([newTicket, ...tickets]);
+      const updated = [newTicket, ...tickets];
+      setTickets(updated);
+      try {
+        localStorage.setItem('smart_career_support_tickets', JSON.stringify(updated));
+      } catch (err) {
+        // ignore
+      }
       setSubject('');
       setMessage('');
       setIsSubmitting(false);
-      toast.success(`Support Ticket #${newTicket.id} created successfully! Our team will respond shortly.`);
+      toast.success(`Support Ticket #${newTicket.id} logged successfully in system queue.`);
     }, 900);
   };
 

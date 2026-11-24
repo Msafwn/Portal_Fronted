@@ -82,9 +82,23 @@ export const DashboardRecentApplications = ({ className = '' }) => {
               <div>
                 <div className="flex items-center gap-2 2xl:gap-3">
                   <h3 className="text-sm 2xl:text-lg font-bold text-slate-900">{app.jobTitle}</h3>
-                  <span className="px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                    {app.matchScore || app.matchPercentage || 80}% Match
-                  </span>
+                  {(() => {
+                    const rawScore = typeof app.matchScore === 'number' ? app.matchScore : (typeof app.matchPercentage === 'number' ? app.matchPercentage : null);
+                    if (rawScore === null) {
+                      return (
+                        <span className="px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                          Pending
+                        </span>
+                      );
+                    }
+                    return (
+                      <span className={`px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full text-[10px] 2xl:text-xs font-bold border ${
+                        rawScore >= 75 ? 'bg-blue-50 text-blue-700 border-blue-200' : rawScore >= 40 ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-rose-50 text-rose-700 border-rose-200'
+                      }`}>
+                        {rawScore}% Match
+                      </span>
+                    );
+                  })()}
                 </div>
                 <p className="text-xs 2xl:text-base text-slate-500 mt-0.5">
                   {app.company} • Applied on {app.appliedDate}

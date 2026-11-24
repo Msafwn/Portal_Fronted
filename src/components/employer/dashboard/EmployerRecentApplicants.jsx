@@ -67,11 +67,12 @@ export const EmployerRecentApplicants = () => {
         ) : (
           sortedApplicants.map((candidate) => {
             const isShortlisted = candidate.status === 'Shortlisted';
-          const breakdown = candidate.scoreBreakdown || {
-            technical: Math.round((candidate.matchScore || 75) * 0.5),
-            experience: Math.round((candidate.matchScore || 75) * 0.3),
-            softSkills: Math.round((candidate.matchScore || 75) * 0.2),
-          };
+            const numScore = typeof candidate.matchScore === 'number' ? candidate.matchScore : null;
+            const breakdown = candidate.scoreBreakdown || (numScore !== null ? {
+              technical: Math.round(numScore * 0.5),
+              experience: Math.round(numScore * 0.3),
+              softSkills: Math.round(numScore * 0.2),
+            } : { technical: 0, experience: 0, softSkills: 0 });
 
           return (
             <div

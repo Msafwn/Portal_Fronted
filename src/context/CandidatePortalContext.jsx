@@ -260,8 +260,18 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
               jobTitle: app.job?.title || 'Applied Role',
               company: app.job?.company || 'Recruiting Company',
               department: app.job?.department || initialUser?.department || 'Technology',
-              matchScore: app.matchPercentage || 85,
-              matchPercentage: app.matchPercentage || 85,
+              matchScore:
+                typeof app.matchPercentage === 'number'
+                  ? app.matchPercentage
+                  : typeof app.matchScore === 'number'
+                  ? app.matchScore
+                  : null,
+              matchPercentage:
+                typeof app.matchPercentage === 'number'
+                  ? app.matchPercentage
+                  : typeof app.matchScore === 'number'
+                  ? app.matchScore
+                  : null,
               appliedDate: app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Recently',
               status: app.status || 'Pending',
               statusVariant:
@@ -310,7 +320,14 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
               const reqSkills = (j.requiredSkills || []).map((s) => (typeof s === 'string' ? s : s.name));
               const matched = reqSkills.filter((s) => candidateSkillSet.has(s.toLowerCase().trim()));
               const missing = reqSkills.filter((s) => !candidateSkillSet.has(s.toLowerCase().trim()));
-              const matchPct = j.matchPercentage || (reqSkills.length > 0 ? Math.round((matched.length / reqSkills.length) * 100) : 80);
+              const matchPct =
+                typeof j.matchPercentage === 'number'
+                  ? j.matchPercentage
+                  : typeof j.matchScore === 'number'
+                  ? j.matchScore
+                  : reqSkills.length > 0
+                  ? Math.round((matched.length / reqSkills.length) * 100)
+                  : null;
 
               const roleCat = (j.jobType || '').toLowerCase().includes('intern')
                 ? 'student'
@@ -337,11 +354,11 @@ export const CandidatePortalProvider = ({ children, initialUser, initialStats, o
                 missingSkills: j.missingSkills || missing,
                 matchPercentage: matchPct,
                 matchScore: matchPct,
-                scoreBreakdown: j.scoreBreakdown || {
+                scoreBreakdown: j.scoreBreakdown || (matchPct !== null ? {
                   technical: Math.round(matchPct * 0.5),
                   experience: Math.round(matchPct * 0.3),
                   softSkills: Math.round(matchPct * 0.2),
-                },
+                } : null),
                 applicantsCount: j.applicantsCount || 0,
                 status: j.status || 'Open',
                 description: j.description || '',

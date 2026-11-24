@@ -9,6 +9,7 @@ export const SupportHeader = ({ className = '' }) => {
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-blue-200 border border-white/15 backdrop-blur-xs">
           <Headphones className="w-3.5 h-3.5 text-blue-400" />
           <span>Help & Support Desk</span>
+          <span className="ml-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/20 text-amber-200 border border-amber-500/30">FYP Prototype Sandbox</span>
         </div>
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
           How can we{' '}

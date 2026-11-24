@@ -19,11 +19,24 @@ export const EmployerApplicantCard = ({
   onReject,
   onViewProfile,
 }) => {
-  const score = applicant.matchScore || 0;
+  const score =
+    typeof applicant.matchScore === 'number'
+      ? applicant.matchScore
+      : typeof applicant.matchPercentage === 'number'
+      ? applicant.matchPercentage
+      : null;
   const isShortlisted = applicant.status === 'Shortlisted';
   const isRejected = applicant.status === 'Rejected';
 
   const getScoreBadgeStyles = (val) => {
+    if (val === null || val === undefined) {
+      return {
+        pill: 'bg-slate-100 text-slate-600 border-slate-200',
+        starColor: 'text-slate-300',
+        label: 'Not Evaluated',
+        barColor: 'bg-slate-300',
+      };
+    }
     if (val >= 90) {
       return {
         pill: 'bg-emerald-50 text-emerald-800 border-emerald-300',
@@ -46,6 +59,14 @@ export const EmployerApplicantCard = ({
         starColor: 'text-amber-500',
         label: 'Good Potential (≥ 70%)',
         barColor: 'bg-amber-500',
+      };
+    }
+    if (val === 0) {
+      return {
+        pill: 'bg-rose-50 text-rose-800 border-rose-300',
+        starColor: 'text-rose-400',
+        label: 'No Match (0%)',
+        barColor: 'bg-rose-500',
       };
     }
     return {
@@ -123,7 +144,9 @@ export const EmployerApplicantCard = ({
               className={`inline-flex items-center gap-1.5 2xl:gap-2 px-3 py-1 2xl:px-4 2xl:py-1.5 rounded-xl 2xl:rounded-2xl text-xs 2xl:text-sm 3xl:text-base font-extrabold border ${scoreStyle.pill}`}
             >
               <Sparkles className={`w-3.5 h-3.5 2xl:w-4 2xl:h-4 ${scoreStyle.starColor}`} />
-              <span className="text-sm 2xl:text-base 3xl:text-lg font-black">{score}% Match</span>
+              <span className="text-sm 2xl:text-base 3xl:text-lg font-black">
+                {score !== null ? `${score}% Match` : 'Evaluation Pending'}
+              </span>
               <span className="text-[11px] 2xl:text-xs 3xl:text-sm font-medium opacity-80">• {scoreStyle.label}</span>
             </div>
           </div>

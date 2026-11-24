@@ -19,6 +19,7 @@ export const connectSocket = (user, token) => {
     auth: {
       token: token || localStorage.getItem('token') || '',
     },
+    withCredentials: true,
     query: {
       userId: userId || '',
       role: role || '',
